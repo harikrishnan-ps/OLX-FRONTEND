@@ -1,0 +1,42 @@
+<div class="notifications-page page-with-navbar-and-bottom-nav">
+  <div class="container section-padding">
+    <div class="page-header">
+      <h1 class="text-headline-lg">Notifications</h1>
+      <div class="header-actions">
+        <button class="btn-text" (click)="markAllAsRead()">Mark all as read</button>
+        <button class="btn-text text-error" (click)="clearAll()">Clear all</button>
+      </div>
+    </div>
+
+    <div class="notifications-list">
+      @if (notifications().length > 0) {
+        @for (notification of notifications(); track notification.id) {
+          <div class="notification-card" [class.unread]="!notification.isRead" (click)="markAsRead(notification.id)">
+            <div class="notification-icon">
+              <span class="material-symbols-outlined">{{ notification.icon }}</span>
+            </div>
+            <div class="notification-content">
+              <h3 class="title">{{ notification.title }}</h3>
+              <p class="description">{{ notification.description }}</p>
+              @if (notification.productTitle) {
+                <span class="product-tag">{{ notification.productTitle }}</span>
+              }
+            </div>
+            <div class="notification-meta">
+              <span class="time">{{ notification.timestamp }}</span>
+              @if (!notification.isRead) {
+                <span class="unread-dot"></span>
+              }
+            </div>
+          </div>
+        }
+      } @else {
+        <div class="empty-state">
+          <span class="material-symbols-outlined empty-icon">notifications_off</span>
+          <h3>No notifications yet</h3>
+          <p>We'll let you know when there's an update on your ads or messages.</p>
+        </div>
+      }
+    </div>
+  </div>
+</div>

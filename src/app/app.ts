@@ -1,12 +1,28 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
+import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
+import { Navbar } from './layout/navbar/navbar';
+import { Footer } from './layout/footer/footer';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, Navbar, Footer],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.css',
 })
 export class App {
-  protected readonly title = signal('olx-clone');
+  showNavbar = true;
+  showFooter = true;
+
+  private readonly hiddenNavbarRoutes = ['/auth/'];
+  private readonly hiddenFooterRoutes = ['/auth/', '/chat', '/post-ad'];
+
+  constructor(private router: Router) {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        const url = event.urlAfterRedirects;
+        this.showNavbar = !this.hiddenNavbarRoutes.some(r => url.startsWith(r));
+        this.showFooter = !this.hiddenFooterRoutes.some(r => url.startsWith(r));
+      }
+    });
+  }
 }

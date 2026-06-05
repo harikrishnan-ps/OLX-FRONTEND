@@ -1,0 +1,105 @@
+<div class="post-ad-page page-with-navbar-and-bottom-nav">
+  <div class="container section-padding">
+    <div class="post-ad-header">
+      <button class="back-btn" (click)="router.navigate(['/'])">
+        <span class="material-symbols-outlined">arrow_back</span>
+      </button>
+      <h1 class="text-headline-md">Post your ad</h1>
+    </div>
+
+    <form class="post-ad-form" [formGroup]="adForm" (ngSubmit)="onSubmit()">
+      
+      <!-- Category -->
+      <div class="form-card">
+        <h2 class="card-title">Selected Category</h2>
+        <div class="form-group">
+          <select class="form-input" formControlName="category" [class.error]="adForm.get('category')?.invalid && adForm.get('category')?.touched">
+            <option value="" disabled selected>Select a category</option>
+            @for (cat of categoriesService.categories(); track cat.id) {
+              <option [value]="cat.slug">{{ cat.name }}</option>
+            }
+          </select>
+          @if (adForm.get('category')?.invalid && adForm.get('category')?.touched) {
+            <span class="error-text">Category is required</span>
+          }
+        </div>
+      </div>
+
+      <!-- Details -->
+      <div class="form-card mt-4">
+        <h2 class="card-title">Include some details</h2>
+        
+        <div class="form-group mb-4">
+          <label class="form-label">Ad title *</label>
+          <input type="text" class="form-input" formControlName="title" placeholder="Key features of your item" [class.error]="adForm.get('title')?.invalid && adForm.get('title')?.touched">
+          <span class="help-text">Mention the key features of your item (e.g. brand, model, age, type)</span>
+          @if (adForm.get('title')?.invalid && adForm.get('title')?.touched) {
+            <span class="error-text">A valid title is required (min 10 chars)</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Description *</label>
+          <textarea class="form-input" rows="6" formControlName="description" placeholder="Include condition, features and reason for selling" [class.error]="adForm.get('description')?.invalid && adForm.get('description')?.touched"></textarea>
+          <span class="help-text">Include condition, features and reason for selling</span>
+          @if (adForm.get('description')?.invalid && adForm.get('description')?.touched) {
+            <span class="error-text">A valid description is required (min 20 chars)</span>
+          }
+        </div>
+      </div>
+
+      <!-- Price -->
+      <div class="form-card mt-4">
+        <h2 class="card-title">Set a price</h2>
+        <div class="form-group">
+          <label class="form-label">Price *</label>
+          <div class="price-input-group">
+            <span class="currency">$</span>
+            <input type="number" class="form-input" formControlName="price" [class.error]="adForm.get('price')?.invalid && adForm.get('price')?.touched">
+          </div>
+          @if (adForm.get('price')?.invalid && adForm.get('price')?.touched) {
+            <span class="error-text">A valid price is required</span>
+          }
+        </div>
+      </div>
+
+      <!-- Photos -->
+      <div class="form-card mt-4">
+        <h2 class="card-title">Upload up to 12 photos</h2>
+        <app-image-upload (urlsChange)="onImagesChange($event)"></app-image-upload>
+      </div>
+
+      <!-- Location -->
+      <div class="form-card mt-4">
+        <h2 class="card-title">Confirm your location</h2>
+        <app-location-picker (locationChange)="onLocationChange($event)"></app-location-picker>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="form-card mt-4">
+        <h2 class="card-title">Review your details</h2>
+        <div class="contact-grid">
+          <div class="form-group">
+            <label class="form-label">Name *</label>
+            <input type="text" class="form-input" formControlName="name" [class.error]="adForm.get('name')?.invalid && adForm.get('name')?.touched">
+            @if (adForm.get('name')?.invalid && adForm.get('name')?.touched) {
+              <span class="error-text">Name is required</span>
+            }
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone number *</label>
+            <input type="tel" class="form-input" formControlName="phone" [class.error]="adForm.get('phone')?.invalid && adForm.get('phone')?.touched">
+            @if (adForm.get('phone')?.invalid && adForm.get('phone')?.touched) {
+              <span class="error-text">Phone is required</span>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions mt-4">
+        <button type="submit" class="btn-primary post-btn" [disabled]="!adForm.valid">Post now</button>
+      </div>
+      
+    </form>
+  </div>
+</div>

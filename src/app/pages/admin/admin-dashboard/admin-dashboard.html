@@ -1,0 +1,44 @@
+<div class="admin-dashboard">
+  <div class="header">
+    <h1>Dashboard Overview</h1>
+    <p>Welcome to the OLX Admin Dashboard.</p>
+  </div>
+
+  @if (isLoading) {
+    <div class="loading">Loading stats...</div>
+  } @else if (stats) {
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon"><span class="material-symbols-outlined">group</span></div>
+        <div class="stat-info">
+          <h3>Total Users</h3>
+          <p class="value">{{ stats.totalUsers }}</p>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon"><span class="material-symbols-outlined">list_alt</span></div>
+        <div class="stat-info">
+          <h3>Active Listings</h3>
+          <p class="value">{{ stats.activeListings }}</p>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon warning"><span class="material-symbols-outlined">report</span></div>
+        <div class="stat-info">
+          <h3>Pending Reports</h3>
+          <p class="value">{{ stats.pendingReports }}</p>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon success"><span class="material-symbols-outlined">payments</span></div>
+        <div class="stat-info">
+          <h3>Revenue (This Month)</h3>
+          <p class="value">${{ stats.totalRevenue }}</p>
+        </div>
+      </div>
+    </div>
+  }
+</div>

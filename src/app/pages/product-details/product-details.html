@@ -1,0 +1,143 @@
+<div class="product-details-page page-with-navbar-and-bottom-nav">
+  @if (isLoading) {
+    <div class="container section-padding">
+      <div class="loading-state">
+        <div class="animate-pulse product-skeleton" style="height: 500px; width: 100%;"></div>
+      </div>
+    </div>
+  } @else if (product) {
+    <div class="container section-padding">
+      <div class="breadcrumb">
+        <span>Home</span>
+        <span class="material-symbols-outlined">chevron_right</span>
+        <span>{{ product.category }}</span>
+        <span class="material-symbols-outlined">chevron_right</span>
+        <span class="current">{{ product.title }}</span>
+      </div>
+
+      <div class="product-layout">
+        <!-- Left Column: Images and Details -->
+        <div class="product-layout__main">
+          
+          <div class="image-gallery">
+            <div class="image-gallery__main">
+              @if (product.images && product.images.length > 0) {
+                <img [src]="product.images[activeImageIndex]" [alt]="product.title">
+              } @else {
+                <div class="placeholder"><span class="material-symbols-outlined">image</span></div>
+              }
+            </div>
+            
+            @if (product.images && product.images.length > 1) {
+              <div class="image-gallery__thumbnails">
+                @for (img of product.images; track $index) {
+                  <button 
+                    class="thumbnail-btn" 
+                    [class.active]="activeImageIndex === $index"
+                    (click)="activeImageIndex = $index"
+                  >
+                    <img [src]="img" alt="Thumbnail">
+                  </button>
+                }
+              </div>
+            }
+          </div>
+
+          <div class="product-info-card mt-4">
+            <div class="product-header">
+              <h1 class="title">{{ product.title }}</h1>
+              <div class="actions">
+                <button class="icon-btn"><span class="material-symbols-outlined">share</span></button>
+                <button class="icon-btn" [class.active]="product.isFavorited">
+                  <span class="material-symbols-outlined" [class.fill]="product.isFavorited">favorite</span>
+                </button>
+              </div>
+            </div>
+            
+            <h2 class="price">${{ product.price | number }}</h2>
+            
+            <div class="meta-info">
+              <span><span class="material-symbols-outlined">location_on</span> {{ product.location.city }}</span>
+              <span><span class="material-symbols-outlined">schedule</span> {{ timeAgo }}</span>
+              <span><span class="material-symbols-outlined">visibility</span> {{ product.views }} views</span>
+            </div>
+          </div>
+
+          <div class="product-description-card mt-4">
+            <h3 class="section-title">Details</h3>
+            
+            @if (product.specs) {
+              <div class="specs-grid mb-4">
+                @for (spec of product.specs | keyvalue; track spec.key) {
+                  <div class="spec-item">
+                    <span class="spec-label">{{ spec.key }}</span>
+                    <span class="spec-value">{{ spec.value }}</span>
+                  </div>
+                }
+              </div>
+            }
+
+            <h3 class="section-title">Description</h3>
+            <div class="description-text">
+              {{ product.description }}
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Column: Seller and Actions -->
+        <aside class="product-layout__sidebar">
+          
+          <div class="price-action-card hidden-mobile">
+            <h2 class="price">${{ product.price | number }}</h2>
+            <button class="btn-primary w-100 mb-2">Chat with Seller</button>
+            <button class="btn-outline w-100">Make Offer</button>
+          </div>
+
+          <div class="seller-section mt-4">
+            <h3 class="section-title">Seller Description</h3>
+            <app-seller-card [seller]="product.seller"></app-seller-card>
+          </div>
+
+          <div class="reviews-section mt-4">
+            <app-reviews-list [userId]="product.seller.id" [listingId]="product.id"></app-reviews-list>
+          </div>
+          
+          <div class="safety-tips mt-4">
+            <h3 class="section-title">Safety Tips</h3>
+            <ul>
+              <li>Meet in a safe, public place</li>
+              <li>Don't pay in advance</li>
+              <li>Inspect the item before buying</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+
+      <!-- Related Products -->
+      @if (relatedProducts.length > 0) {
+        <div class="related-section mt-5">
+          <h2 class="text-headline-md mb-4">Similar items</h2>
+          <div class="product-grid">
+            @for (related of relatedProducts; track related.id) {
+              <app-product-card [product]="related"></app-product-card>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="container section-padding text-center">
+      <h2>Product not found</h2>
+      <a routerLink="/" class="btn-primary mt-3" style="display: inline-block;">Back to Home</a>
+    </div>
+  }
+
+  <!-- Mobile sticky action bar -->
+  @if (product) {
+    <div class="mobile-action-bar visible-mobile">
+      <div class="price">${{ product.price | number }}</div>
+      <button class="btn-primary">Chat</button>
+    </div>
+  }
+</div>

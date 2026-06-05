@@ -1,0 +1,203 @@
+
+<style>
+* { box-sizing: border-box; }
+body { margin: 0; font-family: var(--font-sans); }
+.wrap { padding: 1rem 0; }
+.controls { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1rem; align-items: center; }
+.controls input { flex: 1; min-width: 160px; padding: 6px 10px; font-size: 13px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); background: var(--color-background-primary); color: var(--color-text-primary); }
+.controls select { padding: 6px 10px; font-size: 13px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); background: var(--color-background-primary); color: var(--color-text-primary); }
+.count { font-size: 12px; color: var(--color-text-secondary); white-space: nowrap; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; table-layout: fixed; }
+thead th { background: var(--color-background-secondary); color: var(--color-text-secondary); font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; padding: 8px 10px; text-align: left; border-bottom: 0.5px solid var(--color-border-tertiary); position: sticky; top: 0; z-index: 2; }
+tbody tr { border-bottom: 0.5px solid var(--color-border-tertiary); transition: background 0.1s; }
+tbody tr:hover { background: var(--color-background-secondary); }
+td { padding: 8px 10px; vertical-align: top; word-break: break-word; color: var(--color-text-primary); }
+.method { display: inline-block; font-size: 10px; font-weight: 500; padding: 2px 6px; border-radius: 4px; color: #fff; min-width: 44px; text-align: center; }
+.GET    { background: #1D9E75; }
+.POST   { background: #185FA5; }
+.PUT    { background: #BA7517; }
+.PATCH  { background: #7F77DD; }
+.DELETE { background: #E24B4A; }
+.badge-tag { display: inline-block; font-size: 10px; padding: 1px 6px; border-radius: 3px; background: var(--color-background-info); color: var(--color-text-info); font-weight: 500; }
+.token-yes { color: #1D9E75; font-weight: 500; }
+.token-no  { color: var(--color-text-secondary); }
+.admin-yes { color: #D85A30; font-weight: 500; }
+pre.payload { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: 4px; padding: 6px 8px; font-size: 10px; font-family: var(--font-mono); margin: 0; white-space: pre-wrap; word-break: break-all; max-height: 110px; overflow-y: auto; color: var(--color-text-primary); line-height: 1.5; }
+.col-method { width: 64px; }
+.col-route  { width: 21%; }
+.col-tag    { width: 80px; }
+.col-params { width: 17%; }
+.col-input  { width: 17%; }
+.col-output { width: 17%; }
+.col-token  { width: 58px; }
+.col-auth   { width: 72px; }
+.tbl-wrap { overflow-x: auto; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); }
+</style>
+
+<div class="wrap">
+<h2 class="sr-only">OLX API endpoint documentation table</h2>
+<div class="controls">
+  <input type="text" id="search" placeholder="Search route, tag, method…" oninput="render()">
+  <select id="tagFilter" onchange="render()"><option value="">All tags</option></select>
+  <select id="methodFilter" onchange="render()"><option value="">All methods</option><option>GET</option><option>POST</option><option>PUT</option><option>PATCH</option><option>DELETE</option></select>
+  <span class="count" id="count"></span>
+</div>
+<div class="tbl-wrap">
+<table>
+<thead>
+<tr>
+  <th class="col-method">Method</th>
+  <th class="col-route">Route</th>
+  <th class="col-tag">Tag</th>
+  <th class="col-params">Query / Path params</th>
+  <th class="col-input">Request body</th>
+  <th class="col-output">Response body</th>
+  <th class="col-token">Token req.</th>
+  <th class="col-auth">Authorization</th>
+</tr>
+</thead>
+<tbody id="tbody"></tbody>
+</table>
+</div>
+</div>
+
+<script>
+const schemas = {
+  RegisterDto: {fullName:"string",email:"string",password:"string",confirmPassword:"string",phoneNumber:"string"},
+  LoginDto: {identifier:"string",password:"string"},
+  VerifyOtpDto: {email:"string",otp:"string"},
+  ResendOtpDto: {email:"string"},
+  ForgotPasswordDto: {email:"string"},
+  ResetPasswordDto: {email:"string",otp:"string",newPassword:"string"},
+  RefreshTokenRequestDto: {token:"string",refreshToken:"string"},
+  AuthResponseDto: {token:"string",refreshToken:"string",user:{id:"uuid",fullName:"string",email:"string",role:"string"}},
+  ChangePasswordDto: {currentPassword:"string",newPassword:"string",confirmPassword:"string"},
+  UpdateProfileDto: {fullName:"string",phoneNumber:"string",profilePictureUrl:"string"},
+  UserProfileDto: {id:"uuid",fullName:"string",email:"string",phoneNumber:"string",profilePictureUrl:"string",role:"string",userTier:"string",adQuotaRemaining:"int",createdAt:"datetime"},
+  CreateListingDto: {title:"string",description:"string",price:"double",isNegotiable:"bool",cityId:"int",categoryId:"int",condition:"string",specificationsJson:"string"},
+  UpdateListingDto: {title:"string",description:"string",price:"double",isNegotiable:"bool",cityId:"int",categoryId:"int",condition:"string",specificationsJson:"string",status:"string"},
+  ListingResponseDto: {id:"uuid",title:"string",description:"string",price:"double",status:"string",condition:"string",isFeatured:"bool",cityId:"int",categoryId:"int",createdAt:"datetime"},
+  ListingResponseDtoPagedResultDto: {items:"[ListingResponseDto]",page:"int",pageSize:"int",totalCount:"int"},
+  BlockUserDto: {isBlocked:"bool",reason:"string"},
+  UpdateListingStatusDto: {status:"string",isFeatured:"bool"},
+  UpsertCategoryDto: {name:"string",iconUrl:"string",parentCategoryId:"int|null"},
+  UpsertStaticPageDto: {title:"string",htmlContent:"string"},
+  CreateBannerDto: {imageUrl:"string",linkUrl:"string",placementType:"string",isActive:"bool"},
+  BannerDto: {id:"int",imageUrl:"string",linkUrl:"string",placementType:"string",isActive:"bool"},
+  AdminDashboardStatsDto: {totalUsers:"int",activeUsers:"int",blockedUsers:"int",totalProducts:"int",activeAds:"int",pendingAds:"int",rejectedAds:"int"},
+  CreateReportDto: {listingId:"uuid",reason:"string",description:"string"},
+  CreateReviewDto: {sellerId:"uuid",rating:"int",comment:"string"},
+  DeleteConversationDto: {otherUserId:"uuid",listingId:"uuid"},
+  MessageResponseDto: {id:"uuid",content:"string",sentAt:"datetime",isRead:"bool",senderId:"uuid",senderName:"string",receiverId:"uuid"},
+  NotificationDto: {id:"uuid",message:"string",type:"string",isRead:"bool",createdAt:"datetime"},
+  CountryDto: {id:"int",name:"string",code:"string"},
+  StateDto: {id:"int",name:"string",countryId:"int"},
+  CityDto: {id:"int",name:"string",stateId:"int"},
+  ListingImageDto: {id:"uuid",url:"string",isPrimary:"bool",listingId:"uuid"},
+};
+
+function fmt(dto) {
+  if (!dto) return "—";
+  const o = schemas[dto];
+  if (!o) return dto;
+  return JSON.stringify(o, null, 1);
+}
+
+const endpoints = [
+  {m:"GET",  r:"/api/admin/dashboard/stats",      tag:"Admin",   params:"—", input:null,                 output:"AdminDashboardStatsDto",   token:true,  admin:true},
+  {m:"GET",  r:"/api/admin/dashboard/charts",     tag:"Admin",   params:"—", input:null,                 output:"(chart data)",             token:true,  admin:true},
+  {m:"PATCH",r:"/api/admin/users/{id}/block",     tag:"Admin",   params:"id: uuid (path)", input:"BlockUserDto",      output:"—",                        token:true,  admin:true},
+  {m:"PATCH",r:"/api/admin/listings/{id}/status", tag:"Admin",   params:"id: uuid (path)", input:"UpdateListingStatusDto", output:"—",               token:true,  admin:true},
+  {m:"GET",  r:"/api/admin/reports",              tag:"Admin",   params:"—", input:null,                 output:"(report list)",            token:true,  admin:true},
+  {m:"GET",  r:"/api/admin/reports/{id}",         tag:"Admin",   params:"id: uuid (path)", input:null,  output:"(report detail)",          token:true,  admin:true},
+  {m:"PATCH",r:"/api/admin/reports/{id}/resolve", tag:"Admin",   params:"id: uuid (path)\nstatus: string (query, default: Reviewed)", input:null, output:"—", token:true, admin:true},
+  {m:"GET",  r:"/api/admin/users",                tag:"Admin",   params:"search: string\npage: int (default:1)\npageSize: int (default:20)", input:null, output:"(user list)", token:true, admin:true},
+  {m:"GET",  r:"/api/admin/users/{id}",           tag:"Admin",   params:"id: uuid (path)", input:null,  output:"(user detail)",            token:true,  admin:true},
+  {m:"DELETE",r:"/api/admin/users/{id}",          tag:"Admin",   params:"id: uuid (path)", input:null,  output:"—",                        token:true,  admin:true},
+  {m:"GET",  r:"/api/admin/listings",             tag:"Admin",   params:"search: string\nstatus: string\npage: int\npageSize: int", input:null, output:"(listing list)", token:true, admin:true},
+  {m:"DELETE",r:"/api/admin/listings/{id}",       tag:"Admin",   params:"id: uuid (path)", input:null,  output:"—",                        token:true,  admin:true},
+  {m:"GET",  r:"/api/admin/reviews",              tag:"Admin",   params:"page: int\npageSize: int", input:null, output:"(review list)",    token:true,  admin:true},
+  {m:"DELETE",r:"/api/admin/reviews/{id}",        tag:"Admin",   params:"id: uuid (path)", input:null,  output:"—",                        token:true,  admin:true},
+  {m:"POST", r:"/api/admin/categories",           tag:"Admin",   params:"—", input:"UpsertCategoryDto",  output:"—",                        token:true,  admin:true},
+  {m:"PUT",  r:"/api/admin/categories/{id}",      tag:"Admin",   params:"id: int (path)", input:"UpsertCategoryDto", output:"—",           token:true,  admin:true},
+  {m:"DELETE",r:"/api/admin/categories/{id}",     tag:"Admin",   params:"id: int (path)", input:null,  output:"—",                        token:true,  admin:true},
+  {m:"PUT",  r:"/api/admin/cms/{slug}",           tag:"Admin",   params:"slug: string (path)", input:"UpsertStaticPageDto", output:"—",   token:true,  admin:true},
+  {m:"POST", r:"/api/admin/banners",              tag:"Admin",   params:"—", input:"CreateBannerDto",    output:"BannerDto",                token:true,  admin:true},
+  {m:"DELETE",r:"/api/admin/banners/{id}",        tag:"Admin",   params:"id: int (path)", input:null,  output:"—",                        token:true,  admin:true},
+  {m:"POST", r:"/api/auth/register",              tag:"Auth",    params:"—", input:"RegisterDto",        output:"—",                        token:false, admin:false},
+  {m:"POST", r:"/api/auth/verify-otp",            tag:"Auth",    params:"—", input:"VerifyOtpDto",       output:"AuthResponseDto",          token:false, admin:false},
+  {m:"POST", r:"/api/auth/resend-otp",            tag:"Auth",    params:"—", input:"ResendOtpDto",       output:"—",                        token:false, admin:false},
+  {m:"POST", r:"/api/auth/login",                 tag:"Auth",    params:"—", input:"LoginDto",           output:"AuthResponseDto",          token:false, admin:false},
+  {m:"POST", r:"/api/auth/refresh",               tag:"Auth",    params:"—", input:"RefreshTokenRequestDto", output:"AuthResponseDto",     token:false, admin:false},
+  {m:"POST", r:"/api/auth/forgot-password",       tag:"Auth",    params:"—", input:"ForgotPasswordDto",  output:"—",                        token:false, admin:false},
+  {m:"POST", r:"/api/auth/reset-password",        tag:"Auth",    params:"—", input:"ResetPasswordDto",   output:"—",                        token:false, admin:false},
+  {m:"POST", r:"/api/auth/logout",                tag:"Auth",    params:"—", input:null,                 output:"—",                        token:true,  admin:false},
+  {m:"GET",  r:"/api/chat/history",               tag:"Chat",    params:"otherUserId: uuid (query)\nlistingId: uuid (query)", input:null, output:"[MessageResponseDto]", token:true, admin:false},
+  {m:"PATCH",r:"/api/chat/messages/{id}/read",    tag:"Chat",    params:"id: uuid (path)", input:null,  output:"—",                        token:true,  admin:false},
+  {m:"GET",  r:"/api/chat/conversations",         tag:"Chat",    params:"—", input:null,                 output:"(conversation list)",      token:true,  admin:false},
+  {m:"DELETE",r:"/api/chat/conversations",        tag:"Chat",    params:"—", input:"DeleteConversationDto", output:"—",                    token:true,  admin:false},
+  {m:"GET",  r:"/api/cms/{slug}",                 tag:"CMS",     params:"slug: string (path)", input:null, output:"(static page)",         token:false, admin:false},
+  {m:"GET",  r:"/api/banners",                    tag:"CMS",     params:"placementType: string (query)", input:null, output:"[BannerDto]", token:false, admin:false},
+  {m:"GET",  r:"/api/listings",                   tag:"Listings",params:"Search, CategoryId, CityId, StateId, MinPrice, MaxPrice, Condition, Status, Specifications, DatePosted, Page, PageSize (query)", input:null, output:"ListingResponseDtoPagedResultDto", token:false, admin:false},
+  {m:"POST", r:"/api/listings",                   tag:"Listings",params:"—", input:"CreateListingDto",   output:"ListingResponseDto",       token:true,  admin:false},
+  {m:"GET",  r:"/api/listings/{id}",              tag:"Listings",params:"id: uuid (path)", input:null,  output:"ListingResponseDto",       token:false, admin:false},
+  {m:"PUT",  r:"/api/listings/{id}",              tag:"Listings",params:"id: uuid (path)", input:"UpdateListingDto", output:"ListingResponseDto", token:true, admin:false},
+  {m:"DELETE",r:"/api/listings/{id}",             tag:"Listings",params:"id: uuid (path)", input:null,  output:"—",                        token:true,  admin:false},
+  {m:"PATCH",r:"/api/listings/{id}/sold",         tag:"Listings",params:"id: uuid (path)", input:null,  output:"ListingResponseDto",       token:true,  admin:false},
+  {m:"PATCH",r:"/api/listings/{id}/boost",        tag:"Listings",params:"id: uuid (path)", input:null,  output:"ListingResponseDto",       token:true,  admin:false},
+  {m:"GET",  r:"/api/locations/countries",        tag:"Location",params:"—", input:null,                 output:"[CountryDto]",             token:false, admin:false},
+  {m:"GET",  r:"/api/locations/countries/{id}/states", tag:"Location", params:"id: int (path)", input:null, output:"[StateDto]",          token:false, admin:false},
+  {m:"GET",  r:"/api/locations/states/{id}/cities",    tag:"Location", params:"id: int (path)", input:null, output:"[CityDto]",           token:false, admin:false},
+  {m:"POST", r:"/api/media/upload/{listingId}",   tag:"Media",   params:"listingId: uuid (path)", input:"multipart/form-data: files[] (binary)", output:"[ListingImageDto]", token:true, admin:false},
+  {m:"PATCH",r:"/api/media/{id}/primary",         tag:"Media",   params:"id: uuid (path)", input:null,  output:"ListingImageDto",          token:true,  admin:false},
+  {m:"POST", r:"/api/media/upload/profile",       tag:"Media",   params:"—", input:"multipart/form-data: file (binary)", output:"—",       token:true,  admin:false},
+  {m:"GET",  r:"/api/notifications",              tag:"Notifications", params:"—", input:null,          output:"[NotificationDto]",        token:true,  admin:false},
+  {m:"PATCH",r:"/api/notifications/{id}/read",    tag:"Notifications", params:"id: uuid (path)", input:null, output:"—",                  token:true,  admin:false},
+  {m:"GET",  r:"/api/profile",                    tag:"Profile", params:"—", input:null,                 output:"UserProfileDto",           token:true,  admin:false},
+  {m:"PUT",  r:"/api/profile",                    tag:"Profile", params:"—", input:"UpdateProfileDto",   output:"UserProfileDto",           token:true,  admin:false},
+  {m:"PUT",  r:"/api/profile/change-password",    tag:"Profile", params:"—", input:"ChangePasswordDto",  output:"—",                        token:true,  admin:false},
+  {m:"POST", r:"/api/reports",                    tag:"Reports", params:"—", input:"CreateReportDto",    output:"—",                        token:true,  admin:false},
+  {m:"POST", r:"/api/reviews",                    tag:"Reviews", params:"—", input:"CreateReviewDto",    output:"—",                        token:true,  admin:false},
+  {m:"GET",  r:"/api/reviews/seller/{sellerId}",  tag:"Reviews", params:"sellerId: uuid (path)", input:null, output:"(review list)",       token:false, admin:false},
+  {m:"GET",  r:"/api/wishlist",                   tag:"Wishlist",params:"—", input:null,                 output:"[ListingResponseDto]",     token:true,  admin:false},
+  {m:"POST", r:"/api/wishlist/{listingId}",       tag:"Wishlist",params:"listingId: uuid (path)", input:null, output:"—",                  token:true,  admin:false},
+];
+
+const tagSel = document.getElementById('tagFilter');
+[...new Set(endpoints.map(e=>e.tag))].sort().forEach(t=>{
+  const o = document.createElement('option'); o.value=t; o.textContent=t; tagSel.appendChild(o);
+});
+
+function render() {
+  const q = document.getElementById('search').value.toLowerCase();
+  const tag = document.getElementById('tagFilter').value;
+  const method = document.getElementById('methodFilter').value;
+  const filtered = endpoints.filter(e=>{
+    if (tag && e.tag !== tag) return false;
+    if (method && e.m !== method) return false;
+    if (q && !e.r.toLowerCase().includes(q) && !e.tag.toLowerCase().includes(q) && !e.m.toLowerCase().includes(q)) return false;
+    return true;
+  });
+  document.getElementById('count').textContent = filtered.length + ' endpoint' + (filtered.length===1?'':'s');
+  const tbody = document.getElementById('tbody');
+  tbody.innerHTML = filtered.map(e => {
+    const inputFmt = e.input ? (e.input.startsWith('multipart') ? `<pre class="payload">${e.input}</pre>` : `<pre class="payload">${fmt(e.input)}</pre>`) : '<span style="color:var(--color-text-tertiary)">—</span>';
+    const outputFmt = (e.output && e.output !== '—') ? `<pre class="payload">${fmt(e.output)}</pre>` : '<span style="color:var(--color-text-tertiary)">—</span>';
+    const paramsFmt = e.params !== '—' ? `<pre class="payload">${e.params}</pre>` : '<span style="color:var(--color-text-tertiary)">—</span>';
+    const tokenCell = e.token ? `<span class="token-yes">✓ Yes</span>` : `<span class="token-no">No</span>`;
+    const authCell = e.admin ? `<span class="admin-yes">Admin</span>` : (e.token ? `<span style="color:#185FA5;font-weight:500">User JWT</span>` : `<span style="color:var(--color-text-tertiary)">Public</span>`);
+    return `<tr>
+      <td><span class="method ${e.m}">${e.m}</span></td>
+      <td style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-primary)">${e.r}</td>
+      <td><span class="badge-tag">${e.tag}</span></td>
+      <td>${paramsFmt}</td>
+      <td>${inputFmt}</td>
+      <td>${outputFmt}</td>
+      <td>${tokenCell}</td>
+      <td>${authCell}</td>
+    </tr>`;
+  }).join('');
+}
+
+render();
+</script>

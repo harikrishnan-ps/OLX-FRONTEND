@@ -1,0 +1,72 @@
+<nav class="navbar" role="navigation" aria-label="Main navigation">
+  <div class="navbar__inner container">
+    <!-- Brand -->
+    <a class="navbar__brand" routerLink="/" aria-label="OLX Home">OLX</a>
+
+    <!-- Location (Desktop) -->
+    <div class="navbar__location" aria-label="Current location">
+      <span class="material-symbols-outlined" aria-hidden="true">location_on</span>
+      <span class="navbar__location-text">New York</span>
+      <span class="material-symbols-outlined" aria-hidden="true">expand_more</span>
+    </div>
+
+    <!-- Search Bar (Desktop) -->
+    <div class="navbar__search">
+      <div class="navbar__search-inner">
+        <input
+          id="desktop-search"
+          type="text"
+          class="navbar__search-input"
+          placeholder="Find Cars, Mobile Phones and more..."
+          [value]="searchQuery()"
+          (input)="onSearchInput($event)"
+          (keydown)="onKeydown($event)"
+          aria-label="Search listings"
+        />
+        <button
+          class="navbar__search-btn"
+          (click)="onSearch()"
+          aria-label="Search"
+        >
+          <span class="material-symbols-outlined" aria-hidden="true">search</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Desktop Nav Links -->
+    <div class="navbar__links">
+      <a class="navbar__link" routerLink="/" routerLinkActive="navbar__link--active" [routerLinkActiveOptions]="{exact:true}">Categories</a>
+      <a class="navbar__link" routerLink="/search">Deals</a>
+    </div>
+
+    <!-- Desktop Actions -->
+    <div class="navbar__actions">
+      <button class="btn-icon" routerLink="/notifications" aria-label="Notifications">
+        <span class="material-symbols-outlined" aria-hidden="true">notifications</span>
+      </button>
+      <button class="btn-icon" routerLink="/chat" aria-label="Chat">
+        <span class="material-symbols-outlined" aria-hidden="true">chat</span>
+      </button>
+      <button class="btn-icon" aria-label="Favorites">
+        <span class="material-symbols-outlined" aria-hidden="true">favorite</span>
+      </button>
+      <button class="btn-icon" aria-label="Profile">
+        <span class="material-symbols-outlined" aria-hidden="true">person</span>
+      </button>
+      <a routerLink="/post-ad" class="btn-sell" aria-label="Post an ad">
+        <span class="material-symbols-outlined" aria-hidden="true">add</span>
+        Sell
+      </a>
+    </div>
+
+    <!-- Mobile Actions -->
+    <div class="navbar__mobile-actions">
+      <button class="btn-icon" aria-label="Search">
+        <span class="material-symbols-outlined" aria-hidden="true">search</span>
+      </button>
+      <button class="btn-icon" (click)="toggleMobileMenu()" aria-label="Menu">
+        <span class="material-symbols-outlined" aria-hidden="true">menu</span>
+      </button>
+    </div>
+  </div>
+</nav>

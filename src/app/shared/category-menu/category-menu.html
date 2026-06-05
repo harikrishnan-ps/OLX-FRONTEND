@@ -1,0 +1,12 @@
+<section class="category-menu" aria-label="Browse categories">
+  <div class="category-menu__scroll">
+    @for (cat of categories; track cat.id) {
+      <a class="category-menu__item" [routerLink]="['/category', cat.slug]">
+        <div class="category-menu__icon-wrapper">
+          <span class="material-symbols-outlined">{{ cat.icon }}</span>
+        </div>
+        <span class="category-menu__label">{{ cat.name }}</span>
+      </a>
+    }
+  </div>
+</section>

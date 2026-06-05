@@ -1,0 +1,222 @@
+.product-details-page {
+  background-color: var(--color-canvas);
+  padding-bottom: 80px; // For mobile action bar
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: var(--color-outline);
+  margin-bottom: 16px;
+  
+  .material-symbols-outlined {
+    font-size: 16px;
+    margin: 0 4px;
+  }
+  
+  .current {
+    color: var(--color-on-surface);
+    font-weight: 500;
+  }
+}
+
+.product-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+
+  @media (max-width: 991px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.image-gallery {
+  background-color: var(--color-surface-container-lowest);
+  border: 1px solid var(--color-outline-variant);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+
+  &__main {
+    aspect-ratio: 4/3;
+    background-color: var(--color-surface-variant);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .placeholder .material-symbols-outlined {
+      font-size: 64px;
+      color: var(--color-outline);
+    }
+  }
+
+  &__thumbnails {
+    display: flex;
+    gap: 8px;
+    padding: 16px;
+    overflow-x: auto;
+    
+    .thumbnail-btn {
+      width: 80px;
+      height: 60px;
+      border: 2px solid transparent;
+      border-radius: 4px;
+      padding: 0;
+      overflow: hidden;
+      cursor: pointer;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      &.active {
+        border-color: var(--color-primary);
+      }
+    }
+  }
+}
+
+.product-info-card, .product-description-card, .price-action-card, .safety-tips {
+  background-color: var(--color-surface-container-lowest);
+  border: 1px solid var(--color-outline-variant);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+}
+
+.product-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+
+  .title {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .actions {
+    display: flex;
+    gap: 8px;
+
+    .icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--color-outline);
+      padding: 4px;
+
+      &:hover, &.active {
+        color: var(--color-primary);
+      }
+    }
+  }
+}
+
+.price {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.meta-info {
+  display: flex;
+  gap: 24px;
+  color: var(--color-outline);
+  font-size: 12px;
+
+  span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    .material-symbols-outlined { font-size: 16px; }
+  }
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--color-outline-variant);
+  padding-bottom: 8px;
+}
+
+.specs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+
+  .spec-item {
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    background-color: var(--color-surface);
+    border-radius: 4px;
+
+    .spec-label { color: var(--color-outline); font-size: 12px; }
+    .spec-value { font-weight: 500; font-size: 14px; }
+  }
+}
+
+.description-text {
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.btn-outline {
+  background-color: transparent;
+  border: 2px solid var(--color-primary-container);
+  color: var(--color-primary-container);
+  font-weight: 700;
+  padding: 10px 24px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  
+  &:hover { background-color: var(--color-surface-container-low); }
+}
+
+.w-100 { width: 100%; }
+.mb-2 { margin-bottom: 8px; }
+.mb-4 { margin-bottom: 24px; }
+.mt-3 { margin-top: 16px; }
+.mt-4 { margin-top: 24px; }
+.mt-5 { margin-top: 40px; }
+
+.safety-tips {
+  ul {
+    padding-left: 20px;
+    list-style-type: disc;
+    li { margin-bottom: 8px; font-size: 14px; }
+  }
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.mobile-action-bar {
+  position: fixed;
+  bottom: var(--navbar-height-mobile);
+  left: 0;
+  right: 0;
+  background-color: var(--color-surface-container-lowest);
+  border-top: 1px solid var(--color-outline-variant);
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 99;
+
+  .price { margin: 0; font-size: 24px; }
+  .btn-primary { padding: 12px 32px; }
+}

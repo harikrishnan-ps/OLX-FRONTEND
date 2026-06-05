@@ -1,0 +1,419 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Cars Category - MarketPlace</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed": "#ffdcc4",
+                    "inverse-primary": "#a5ced4",
+                    "on-surface": "#1a1c1c",
+                    "background": "#f9f9f9",
+                    "secondary-fixed-dim": "#b3c5ff",
+                    "outline": "#717879",
+                    "on-primary-container": "#70989d",
+                    "primary-fixed": "#c1eaf0",
+                    "on-tertiary-fixed-variant": "#603f25",
+                    "on-error": "#ffffff",
+                    "surface-variant": "#e2e2e2",
+                    "on-error-container": "#93000a",
+                    "surface-tint": "#3d646a",
+                    "on-secondary-container": "#fefcff",
+                    "surface": "#f9f9f9",
+                    "surface-bright": "#f9f9f9",
+                    "on-primary": "#ffffff",
+                    "error": "#ba1a1a",
+                    "outline-variant": "#c0c8c9",
+                    "on-secondary": "#ffffff",
+                    "surface-dim": "#dadada",
+                    "on-background": "#1a1c1c",
+                    "on-secondary-fixed-variant": "#003fa4",
+                    "tertiary-container": "#3f230b",
+                    "on-tertiary-fixed": "#2e1501",
+                    "surface-container-high": "#e8e8e8",
+                    "tertiary-fixed-dim": "#edbd9a",
+                    "secondary-container": "#2a6bf3",
+                    "primary": "#00191c",
+                    "error-container": "#ffdad6",
+                    "primary-container": "#002f34",
+                    "tertiary": "#260f00",
+                    "inverse-on-surface": "#f1f1f0",
+                    "inverse-surface": "#2f3131",
+                    "on-primary-fixed": "#001f23",
+                    "on-surface-variant": "#414849",
+                    "on-secondary-fixed": "#001849",
+                    "on-primary-fixed-variant": "#254d52",
+                    "primary-fixed-dim": "#a5ced4",
+                    "on-tertiary-container": "#b38869",
+                    "surface-container": "#eeeeee",
+                    "secondary-fixed": "#dae1ff",
+                    "surface-container-highest": "#e2e2e2",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary": "#0052d1",
+                    "surface-container-low": "#f3f3f3"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "card-padding": "16px",
+                    "container-max-width": "1280px",
+                    "grid-gutter": "16px",
+                    "navbar-height": "72px",
+                    "navbar-height-mobile": "64px",
+                    "section-padding": "32px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Inter"],
+                    "label-bold": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "price-display": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "700"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "price-display": ["24px", {"lineHeight": "32px", "fontWeight": "800"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined[data-weight="fill"] {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-lg min-h-screen flex flex-col">
+<!-- TopNavBar (Desktop) -->
+<header class="bg-surface dark:bg-on-primary-fixed text-secondary dark:text-secondary-fixed font-headline-md text-headline-md font-body-lg text-body-lg fixed top-0 w-full z-[1000] border-b border-outline-variant dark:border-outline shadow-sm hidden md:block">
+<div class="flex items-center justify-between px-card-padding h-navbar-height max-w-container-max-width mx-auto">
+<div class="flex items-center gap-8">
+<a class="text-headline-md font-headline-md font-bold text-primary dark:text-primary-fixed" href="#">OLX</a>
+<nav class="flex gap-6">
+<a class="text-secondary font-bold border-b-2 border-secondary pb-1 flex-col" href="#">Categories</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-200" href="#">Deals</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-200" href="#">Sell</a>
+</nav>
+</div>
+<div class="flex-1 max-w-md mx-8">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full h-12 pl-10 pr-4 bg-surface-container-lowest border border-outline-variant rounded-full focus:border-secondary-container focus:border-2 focus:outline-none transition-all duration-200 text-body-lg font-body-lg" placeholder="Search Cars..." type="text">
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:text-primary hover:bg-surface-container-low rounded-full transition-colors duration-200 active:scale-95 transition-transform" data-icon="notifications"><span class="material-symbols-outlined">notifications</span></button>
+<button class="p-2 text-on-surface-variant hover:text-primary hover:bg-surface-container-low rounded-full transition-colors duration-200 active:scale-95 transition-transform" data-icon="chat"><span class="material-symbols-outlined">chat</span></button>
+<button class="p-2 text-on-surface-variant hover:text-primary hover:bg-surface-container-low rounded-full transition-colors duration-200 active:scale-95 transition-transform" data-icon="favorite"><span class="material-symbols-outlined">favorite</span></button>
+<button class="p-2 text-on-surface-variant hover:text-primary hover:bg-surface-container-low rounded-full transition-colors duration-200 active:scale-95 transition-transform" data-icon="person"><span class="material-symbols-outlined">person</span></button>
+<button class="bg-[#FFCE32] border-2 border-primary-container text-primary-container font-bold px-6 py-2 rounded-full flex items-center gap-2 hover:bg-[#e6b82c] transition-colors active:scale-95">
+<span class="material-symbols-outlined font-bold">add</span>
+                    Sell
+                </button>
+</div>
+</div>
+</header>
+<!-- SideNavBar / Bottom Nav Shell (Mobile/Tablet) -->
+<nav class="md:hidden bg-surface dark:bg-inverse-surface text-primary dark:text-inverse-primary font-label-bold text-label-bold fixed bottom-0 w-full z-[1001] shadow-md border-t border-outline-variant">
+<div class="flex justify-around items-center h-navbar-height-mobile px-4">
+<a class="flex flex-col items-center gap-1 text-on-surface-variant hover:bg-surface-variant dark:hover:bg-on-surface-variant rounded-lg p-2 transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 bg-primary-container text-on-primary-container rounded-lg font-bold p-2 transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-weight="fill">search</span>
+<span class="">Search</span>
+</a>
+<button class="bg-[#FFCE32] border-2 border-primary-container text-primary-container p-3 rounded-full -mt-6 shadow-lg flex items-center justify-center relative active:scale-95 transition-transform">
+<span class="material-symbols-outlined font-bold">add</span>
+</button>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant hover:bg-surface-variant dark:hover:bg-on-surface-variant rounded-lg p-2 transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined">favorite</span>
+<span class="">Favourites</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant hover:bg-surface-variant dark:hover:bg-on-surface-variant rounded-lg p-2 transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="">Profile</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 mt-navbar-height-mobile md:mt-navbar-height mb-navbar-height-mobile md:mb-0 max-w-container-max-width mx-auto w-full px-4 md:px-card-padding py-section-padding">
+<!-- Hero Banner (Cars Specific) -->
+<section class="mb-8 rounded-xl overflow-hidden relative h-48 md:h-64 flex items-center bg-surface-variant">
+<img alt="Cars Hero" class="absolute inset-0 w-full h-full object-cover" data-alt="A dynamic, high-quality photograph of a sleek, modern sports car driving on a coastal highway at golden hour. The sunlight reflects off the car's metallic paint, creating a premium and aspirational mood. The overall aesthetic is clean and professional, matching the modern corporate marketplace style with strong contrast and sharp details." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMxrNHOfoPYFQ7pMDXldqik-jZnsJkOpOfCrHlNoGMf7ufDeY4I_zR3XdI9NfuqJ4xIQWwVOGW6sMPX8Pvaqla2-an5vyir7njJW8S-dbTHiNdiSbS3BIYNF33grT2zJOb8jeek0Wb_AJEn-OzjXFatZ0wbIJO6qAzJ6Ru6rnCaRmEIcjXYw_d6B4EhdhH1_fkfYqNG0lTZPhFpbVa3EyhBr7tozZ_7mZ6g3bjwbsIKtOh4rrHKgbQHes9CTP-wPS2YfhvjoUZ7aY">
+<div class="absolute inset-0 bg-gradient-to-r from-primary/80 to-transparent"></div>
+<div class="relative z-10 p-8">
+<h1 class="font-display-lg text-display-lg text-on-primary mb-2">Find Your Drive</h1>
+<p class="font-body-lg text-body-lg text-on-primary/90 max-w-md">Browse thousands of verified vehicles from trusted local sellers and dealerships.</p>
+</div>
+</section>
+<!-- Main Layout (Sidebar + Grid) -->
+<div class="flex flex-col md:flex-row gap-8">
+<!-- Filter Sidebar -->
+<aside class="w-full md:w-64 shrink-0 bg-surface-container-lowest border border-outline-variant rounded-lg p-card-padding shadow-sm h-fit sticky top-[96px]">
+<h2 class="font-headline-md text-headline-md mb-4 flex items-center justify-between">
+                    Filters
+                    <span class="material-symbols-outlined text-outline">tune</span>
+</h2><div class="mb-6">
+  <label class="block font-label-bold text-label-bold text-on-surface-variant mb-2">Location</label>
+  <div class="relative">
+    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">location_on</span>
+    <input type="text" placeholder="Search location..." class="w-full pl-10 pr-4 py-2 border border-outline-variant rounded-md font-body-sm text-body-sm focus:border-secondary-container focus:ring-1 focus:ring-secondary-container">
+  </div>
+</div>
+<div class="space-y-6">
+<!-- Make/Model -->
+<div><label class="block font-label-bold text-label-bold text-on-surface-variant mb-2">Brand</label>
+<div class="space-y-2">
+  <label class="flex items-center gap-2 cursor-pointer">
+    <input type="checkbox" class="rounded border-outline-variant text-primary-container focus:ring-primary-container">
+    <span class="font-body-sm text-body-sm">Toyota</span>
+  </label>
+  <label class="flex items-center gap-2 cursor-pointer">
+    <input type="checkbox" class="rounded border-outline-variant text-primary-container focus:ring-primary-container">
+    <span class="font-body-sm text-body-sm">Honda</span>
+  </label>
+  <label class="flex items-center gap-2 cursor-pointer">
+    <input type="checkbox" class="rounded border-outline-variant text-primary-container focus:ring-primary-container">
+    <span class="font-body-sm text-body-sm">Ford</span>
+  </label>
+  <label class="flex items-center gap-2 cursor-pointer">
+    <input type="checkbox" class="rounded border-outline-variant text-primary-container focus:ring-primary-container">
+    <span class="font-body-sm text-body-sm">BMW</span>
+  </label>
+</div></div>
+<!-- Body Type Bento Grid Filter -->
+<div>
+<label class="block font-label-bold text-label-bold text-on-surface-variant mb-2">Body Type</label>
+<div class="grid grid-cols-2 gap-2">
+<button class="border border-outline-variant rounded-md p-2 flex flex-col items-center justify-center gap-1 hover:border-primary transition-colors bg-surface-container-lowest">
+<span class="material-symbols-outlined text-outline">directions_car</span>
+<span class="font-label-sm text-label-sm">Sedan</span>
+</button>
+<button class="border-2 border-primary-container bg-primary-container/5 rounded-md p-2 flex flex-col items-center justify-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-primary-container">airport_shuttle</span>
+<span class="font-label-sm text-label-sm font-bold text-primary-container">SUV</span>
+</button>
+<button class="border border-outline-variant rounded-md p-2 flex flex-col items-center justify-center gap-1 hover:border-primary transition-colors bg-surface-container-lowest">
+<span class="material-symbols-outlined text-outline">local_shipping</span>
+<span class="font-label-sm text-label-sm">Truck</span>
+</button>
+<button class="border border-outline-variant rounded-md p-2 flex flex-col items-center justify-center gap-1 hover:border-primary transition-colors bg-surface-container-lowest">
+<span class="material-symbols-outlined text-outline">sports_motorsports</span>
+<span class="font-label-sm text-label-sm">Coupe</span>
+</button>
+</div>
+</div><div>
+  <label class="block font-label-bold text-label-bold text-on-surface-variant mb-2">Year</label>
+  <div class="flex items-center gap-2">
+    <input type="number" placeholder="Min" class="w-full border-outline-variant rounded-md font-body-sm text-body-sm focus:border-secondary-container focus:ring-1 focus:ring-secondary-container">
+    <span class="text-outline-variant">-</span>
+    <input type="number" placeholder="Max" class="w-full border-outline-variant rounded-md font-body-sm text-body-sm focus:border-secondary-container focus:ring-1 focus:ring-secondary-container">
+  </div>
+</div><div>
+  <label class="block font-label-bold text-label-bold text-on-surface-variant mb-2">Number of Owners</label>
+  <div class="space-y-2">
+    <label class="flex items-center gap-2 cursor-pointer">
+      <input type="checkbox" class="rounded border-outline-variant text-primary-container focus:ring-primary-container">
+      <span class="font-body-sm text-body-sm">1st Owner</span>
+    </label>
+    <label class="flex items-center gap-2 cursor-pointer">
+      <input type="checkbox" class="rounded border-outline-variant text-primary-container focus:ring-primary-container">
+      <span class="font-body-sm text-body-sm">2nd Owner</span>
+    </label>
+    <label class="flex items-center gap-2 cursor-pointer">
+      <input type="checkbox" class="rounded border-outline-variant text-primary-container focus:ring-primary-container">
+      <span class="font-body-sm text-body-sm">3rd Owner</span>
+    </label>
+    <label class="flex items-center gap-2 cursor-pointer">
+      <input type="checkbox" class="rounded border-outline-variant text-primary-container focus:ring-primary-container">
+      <span class="font-body-sm text-body-sm">4th+ Owner</span>
+    </label>
+  </div>
+</div>
+<!-- Price Range -->
+<div>
+<label class="block font-label-bold text-label-bold text-on-surface-variant mb-2">Price Range</label>
+<div class="flex items-center gap-2">
+<input class="w-full border-outline-variant rounded-md font-body-sm text-body-sm" placeholder="Min" type="number">
+<span class="text-outline-variant">-</span>
+<input class="w-full border-outline-variant rounded-md font-body-sm text-body-sm" placeholder="Max" type="number">
+</div>
+</div>
+<div>
+  <label class="block font-label-bold text-label-bold text-on-surface-variant mb-2">Inspection Status</label>
+  <div class="space-y-2">
+    <label class="flex items-center gap-2 cursor-pointer">
+      <input type="checkbox" class="rounded border-outline-variant text-primary-container focus:ring-primary-container">
+      <span class="font-body-sm text-body-sm">Verified/Inspected</span>
+    </label>
+    <label class="flex items-center gap-2 cursor-pointer">
+      <input type="checkbox" class="rounded border-outline-variant text-primary-container focus:ring-primary-container">
+      <span class="font-body-sm text-body-sm">Not Inspected</span>
+    </label>
+  </div>
+</div><button class="w-full bg-primary-container text-on-primary font-bold py-2 rounded-md hover:bg-primary transition-colors">Apply Filters</button>
+</div>
+</aside>
+<!-- Product Grid Area -->
+<div class="flex-1">
+<!-- Active Filters & Sort -->
+<div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+<div class="flex flex-wrap gap-2">
+<span class="inline-flex items-center gap-1 bg-primary-container text-on-primary px-3 py-1 rounded-full font-label-sm text-label-sm">
+                            SUV
+                            <button class="material-symbols-outlined text-[14px] hover:text-outline-variant">close</button>
+</span>
+</div>
+<div class="flex items-center gap-2 font-body-sm text-body-sm text-on-surface-variant">
+<span class="">Sort by:</span>
+<select class="border-none bg-transparent font-bold text-primary focus:ring-0 cursor-pointer p-0 pr-4">
+<option>Newly Listed</option>
+<option>Price: Low to High</option>
+<option>Price: High to Low</option>
+<option>Mileage: Low to High</option>
+</select>
+</div>
+</div>
+<!-- Bento-lite Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-grid-gutter">
+<!-- Card 1 -->
+<article class="bg-surface-container-lowest border border-[#DDE2E2] rounded-xl overflow-hidden shadow-[0_2px_4px_rgba(0,47,52,0.05)] hover:shadow-[0_8px_16px_rgba(0,47,52,0.12)] hover:-translate-y-1 transition-all duration-300 group cursor-pointer flex flex-col">
+<div class="relative aspect-[4/3] bg-surface-variant overflow-hidden">
+<img alt="Car Listing" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A clean, well-lit studio photograph of a modern dark blue SUV angled slightly towards the camera. The background is a stark, minimal white studio setting. Lighting is soft and even, highlighting the car's curves and metallic finish. The image reflects a professional, trustworthy marketplace aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuADFLeylAsDlMwrYqa-LSQewXWOAEysvZmdP_-W_2n1VvW_W9dGHmBb9P1xyqq7LdFLYkdPvlYjm8RjYJlIV4qXLu2-DBjjk2sVNx0lewVnZx9d0EyAE4R79Myu-rtov7XIJiZcFaRHJxbvDfxpfyAH355KVZ9ZOvtvOYTGRkoc_1R0BrDZ7TsD-fdTGzp6Chhs4hNwU0aSo_2TjhyTBFGa4AKJifkvsmuEhLLlAMeg9nSwfWfjoJq0onvSrottk5_HE8EHgD_32g0">
+<button class="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-outline hover:text-error transition-colors" data-icon="favorite">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</button>
+</div>
+<div class="p-card-padding flex-1 flex flex-col">
+<h3 class="font-price-display text-price-display text-on-surface mb-1">$24,500</h3>
+<h4 class="font-headline-md text-[16px] leading-tight text-on-surface-variant mb-3 line-clamp-2">2019 Toyota RAV4 XLE Premium</h4>
+<!-- Specs Chips -->
+<div class="flex flex-wrap gap-2 mb-4 mt-auto">
+<span class="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm px-2 py-1 rounded">42k miles</span>
+<span class="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm px-2 py-1 rounded">Automatic</span>
+<span class="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm px-2 py-1 rounded">Gasoline</span>
+</div>
+<div class="flex items-center justify-between border-t border-outline-variant pt-3 mt-auto">
+<span class="font-label-sm text-label-sm text-outline flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+                                    Downtown, City
+                                </span>
+<span class="font-label-sm text-label-sm text-outline">2 hrs ago</span>
+</div>
+</div>
+</article>
+<!-- Card 2 -->
+<article class="bg-surface-container-lowest border border-[#DDE2E2] rounded-xl overflow-hidden shadow-[0_2px_4px_rgba(0,47,52,0.05)] hover:shadow-[0_8px_16px_rgba(0,47,52,0.12)] hover:-translate-y-1 transition-all duration-300 group cursor-pointer flex flex-col">
+<div class="relative aspect-[4/3] bg-surface-variant overflow-hidden">
+<img alt="Car Listing" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A high-quality outdoor photograph of a white compact crossover parked in a suburban driveway on a sunny day. The lighting is natural and bright, conveying a sense of transparency and everyday reliability. The composition is straightforward, emphasizing the vehicle's condition suitable for a professional marketplace listing." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7A82KX3m0uWCAyjaZpa-nOve3TB49M07RR76xjSiImlmD5tspD-na2tdgCN2BO1KH8RIgD1dHog-IWUPvX61Qo8at6kvEIkK8EtIkUW4qriTtmg0vhT27DuckxgYiC4JjZxMsBP8EZtX3dFesIam6OMm1LBKgsP-ilwrHJSCqgxYzMLBkOZCb24OwTOkCYnHyxiCSXDxzcN9TC2F05EjBxjb2Q7G-y4FfvVYCEWJm4ANYT3d3RY0AAXRWocQjrLKnaDjuV56K7eo">
+<button class="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-outline hover:text-error transition-colors" data-icon="favorite">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</button>
+</div>
+<div class="p-card-padding flex-1 flex flex-col">
+<h3 class="font-price-display text-price-display text-on-surface mb-1">$18,900</h3>
+<h4 class="font-headline-md text-[16px] leading-tight text-on-surface-variant mb-3 line-clamp-2">2018 Honda CR-V EX-L AWD</h4>
+<div class="flex flex-wrap gap-2 mb-4 mt-auto">
+<span class="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm px-2 py-1 rounded">55k miles</span>
+<span class="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm px-2 py-1 rounded">Automatic</span>
+<span class="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm px-2 py-1 rounded">Hybrid</span>
+</div>
+<div class="flex items-center justify-between border-t border-outline-variant pt-3 mt-auto">
+<span class="font-label-sm text-label-sm text-outline flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+                                    Westside, City
+                                </span>
+<span class="font-label-sm text-label-sm text-outline">5 hrs ago</span>
+</div>
+</div>
+</article>
+<!-- Card 3 -->
+<article class="bg-surface-container-lowest border border-[#DDE2E2] rounded-xl overflow-hidden shadow-[0_2px_4px_rgba(0,47,52,0.05)] hover:shadow-[0_8px_16px_rgba(0,47,52,0.12)] hover:-translate-y-1 transition-all duration-300 group cursor-pointer flex flex-col">
+<div class="relative aspect-[4/3] bg-surface-variant overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-tr from-surface-variant to-surface-dim flex items-center justify-center">
+<span class="material-symbols-outlined text-display-lg text-outline-variant opacity-50">directions_car</span>
+</div>
+<!-- Image missing placeholder -->
+<button class="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-outline hover:text-error transition-colors" data-icon="favorite">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</button>
+</div>
+<div class="p-card-padding flex-1 flex flex-col">
+<h3 class="font-price-display text-price-display text-on-surface mb-1">$32,000</h3>
+<h4 class="font-headline-md text-[16px] leading-tight text-on-surface-variant mb-3 line-clamp-2">2021 Ford Bronco Sport Outer Banks</h4>
+<div class="flex flex-wrap gap-2 mb-4 mt-auto">
+<span class="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm px-2 py-1 rounded">12k miles</span>
+<span class="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm px-2 py-1 rounded">Automatic</span>
+<span class="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm px-2 py-1 rounded">Gasoline</span>
+</div>
+<div class="flex items-center justify-between border-t border-outline-variant pt-3 mt-auto">
+<span class="font-label-sm text-label-sm text-outline flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+                                    North Suburbs
+                                </span>
+<span class="font-label-sm text-label-sm text-outline">1 day ago</span>
+</div>
+</div>
+</article>
+</div>
+<!-- Pagination Load More -->
+<div class="mt-8 flex justify-center">
+<button class="px-6 py-2 border border-primary-container text-primary-container font-bold rounded-md hover:bg-surface-container-low transition-colors">Load More Cars</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-primary-container dark:bg-on-primary-fixed-variant text-on-primary-container dark:text-primary-fixed font-body-sm text-body-sm w-full mt-auto border-t border-outline-variant">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-grid-gutter px-section-padding py-section-padding max-w-container-max-width mx-auto">
+<div class="col-span-2 lg:col-span-2">
+<div class="font-headline-md text-headline-md text-surface-lowest mb-4">OLX</div>
+<p class="text-on-primary-container/80 mb-4">© 2024 OLX Inc. All rights reserved.</p>
+</div>
+<div class="flex flex-col gap-2">
+<a class="text-on-primary-container/80 hover:text-on-primary-container hover:underline transition-colors" href="#">Help Center</a>
+<a class="text-on-primary-container/80 hover:text-on-primary-container hover:underline transition-colors" href="#">Safety Information</a>
+</div>
+<div class="flex flex-col gap-2">
+<a class="text-on-primary-container/80 hover:text-on-primary-container hover:underline transition-colors" href="#">Terms of Use</a>
+<a class="text-on-primary-container/80 hover:text-on-primary-container hover:underline transition-colors" href="#">Privacy Policy</a>
+</div>
+<div class="flex flex-col gap-2">
+<a class="text-on-primary-container/80 hover:text-on-primary-container hover:underline transition-colors" href="#">Mobile Apps</a>
+<a class="text-on-primary-container/80 hover:text-on-primary-container hover:underline transition-colors" href="#">Contact Us</a>
+</div>
+</div>
+</footer>
+
+
+
+
+</body></html>

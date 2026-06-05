@@ -1,0 +1,58 @@
+<div class="home-page page-with-navbar-and-bottom-nav">
+  
+  <!-- Hero Section -->
+  <section class="hero-section section-padding">
+    <div class="container">
+      <div class="hero-content">
+        <h1 class="text-display-lg text-primary">Find Anything, Sell Everything</h1>
+        <p class="text-body-lg text-on-surface-variant mb-4">Discover great deals on everything from electronics to vehicles in your local area.</p>
+        
+        <div class="hero-search visible-mobile">
+          <app-search-bar placeholder="Find cars, phones and more..." (search)="onSearch($event)"></app-search-bar>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories Section -->
+  <section class="categories-section section-padding bg-surface">
+    <div class="container">
+      <h2 class="text-headline-md mb-3">Browse Categories</h2>
+      <app-category-menu [categories]="categoriesService.categories()"></app-category-menu>
+    </div>
+  </section>
+
+  <!-- Fresh Recommendations Section -->
+  <section class="recommendations-section section-padding">
+    <div class="container">
+      <h2 class="text-headline-md mb-3">Fresh recommendations</h2>
+      
+      @if (isLoading) {
+        <div class="product-grid">
+          @for (i of [1,2,3,4,5,6,7,8]; track i) {
+            <div class="product-skeleton animate-pulse"></div>
+          }
+        </div>
+      } @else {
+        <div class="product-grid">
+          @for (product of products; track product.id) {
+            <app-product-card [product]="product" (favoriteToggled)="toggleFavorite($event)"></app-product-card>
+          }
+        </div>
+      }
+      
+      @if (!isLoading && products.length === 0) {
+        <div class="empty-state">
+          <span class="material-symbols-outlined empty-icon">sentiment_dissatisfied</span>
+          <h3>No products found</h3>
+          <p>We couldn't load the recommendations right now.</p>
+        </div>
+      }
+
+      <div class="load-more-container mt-4">
+        <button class="btn-primary">Load more</button>
+      </div>
+    </div>
+  </section>
+
+</div>

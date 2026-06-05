@@ -1,0 +1,52 @@
+.filter-sidebar {
+  background-color: var(--color-surface-container-lowest);
+  border: 1px solid var(--color-outline-variant);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  &__header {
+    h2 { margin: 0; font-size: 18px; }
+  }
+
+  .filter-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    .filter-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin: 0;
+      color: var(--color-on-surface);
+    }
+  }
+
+  .price-inputs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .form-input {
+      width: 100%;
+      padding: 8px 12px;
+    }
+  }
+
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--color-on-surface-variant);
+    cursor: pointer;
+    
+    input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+  }
+}

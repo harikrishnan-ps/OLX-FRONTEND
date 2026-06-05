@@ -1,0 +1,31 @@
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="admin-logo">OLX Admin</div>
+    <nav class="admin-nav">
+      <a routerLink="./dashboard" routerLinkActive="active" class="nav-item">
+        <span class="material-symbols-outlined">dashboard</span>
+        Dashboard
+      </a>
+      <a routerLink="./users" routerLinkActive="active" class="nav-item">
+        <span class="material-symbols-outlined">group</span>
+        Users
+      </a>
+      <a routerLink="./listings" routerLinkActive="active" class="nav-item">
+        <span class="material-symbols-outlined">list_alt</span>
+        Listings
+      </a>
+      <a routerLink="./categories" routerLinkActive="active" class="nav-item">
+        <span class="material-symbols-outlined">category</span>
+        Categories
+      </a>
+      <a routerLink="./reports" routerLinkActive="active" class="nav-item">
+        <span class="material-symbols-outlined">report</span>
+        Reports
+      </a>
+    </nav>
+  </aside>
+  
+  <main class="admin-main">
+    <router-outlet></router-outlet>
+  </main>
+</div>

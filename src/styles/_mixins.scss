@@ -1,0 +1,85 @@
+@use 'variables' as *;
+
+// Responsive breakpoints
+@mixin mobile {
+  @media (max-width: #{$breakpoint-mobile - 1px}) { @content; }
+}
+
+@mixin tablet {
+  @media (min-width: #{$breakpoint-mobile}) and (max-width: #{$breakpoint-tablet - 1px}) { @content; }
+}
+
+@mixin desktop {
+  @media (min-width: #{$breakpoint-tablet}) { @content; }
+}
+
+@mixin md-up {
+  @media (min-width: #{$breakpoint-mobile}) { @content; }
+}
+
+@mixin lg-up {
+  @media (min-width: #{$breakpoint-tablet}) { @content; }
+}
+
+// Card elevation
+@mixin card-level-1 {
+  box-shadow: var(--shadow-card);
+  transition: var(--transition-base);
+  &:hover {
+    box-shadow: var(--shadow-card-hover);
+    transform: translateY(-2px);
+  }
+}
+
+// Flex utilities
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+// Hide scrollbar
+@mixin hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+// Text truncate
+@mixin line-clamp($lines: 2) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// Focus ring
+@mixin focus-ring {
+  &:focus {
+    outline: none;
+    border-color: #3A77FF;
+    border-width: 2px;
+    box-shadow: 0 0 0 4px rgba(58, 119, 255, 0.1);
+  }
+}
+
+// Input base
+@mixin input-base {
+  width: 100%;
+  background-color: var(--color-surface-container-lowest);
+  border: 1px solid var(--color-outline-variant);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  font-family: $font-family-base;
+  font-size: $font-size-body-lg;
+  color: var(--color-on-surface);
+  transition: var(--transition-base);
+  @include focus-ring;
+  &::placeholder { color: var(--color-outline); }
+}
