@@ -62,11 +62,12 @@ export class ImageUpload {
     if (files.length > 0) {
       const fileArray = Array.from(files);
       this.isUploading = true;
-      this.mediaService.upload(fileArray, 'listing').subscribe({
+      this.mediaService.uploadListingMedia('temp_listing', fileArray).subscribe({
         next: (res) => {
           this.isUploading = false;
-          if (res.urls) {
-            this.uploadedUrls = [...this.uploadedUrls, ...res.urls];
+          if (res && res.length > 0) {
+            const urls = res.map(img => img.url || '');
+            this.uploadedUrls = [...this.uploadedUrls, ...urls];
             this.urlsChange.emit(this.uploadedUrls);
           }
         },

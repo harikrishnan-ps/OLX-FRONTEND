@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-registration-page',
@@ -17,6 +18,7 @@ export class RegistrationPage implements OnInit {
 
   registerForm!: FormGroup;
   showPassword = false;
+  serverError: string | null = null;
 
   ngOnInit(): void {
     this.registerForm = this.fb.group({
@@ -34,13 +36,18 @@ export class RegistrationPage implements OnInit {
 
   onSubmit(): void {
     if (this.registerForm.valid) {
+      this.serverError = null;
       this.authService.register(this.registerForm.value).subscribe({
         next: () => {
           this.router.navigate(['/auth/verify-otp'], { queryParams: { email: this.registerForm.value.email } });
         },
-        error: (err) => {
+        error: (err: HttpErrorResponse) => {
           console.error('Registration error', err);
-          // TODO: handle error in UI
+          if (err.status === 409) {
+            this.serverError = err.error?.message || 'This email is already registered.';
+          } else {
+            this.serverError = err.error?.message || 'Registration failed. Please try again.';
+          }
         }
       });
     } else {

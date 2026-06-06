@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { adminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
   {
@@ -78,6 +79,7 @@ export const routes: Routes = [
   },
   {
     path: 'admin',
+    canActivate: [adminGuard],
     loadComponent: () => import('./pages/admin/admin-layout/admin-layout').then(m => m.AdminLayout),
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -85,7 +87,10 @@ export const routes: Routes = [
       { path: 'users', loadComponent: () => import('./pages/admin/admin-users/admin-users').then(m => m.AdminUsers), title: 'Manage Users' },
       { path: 'listings', loadComponent: () => import('./pages/admin/admin-listings/admin-listings').then(m => m.AdminListings), title: 'Manage Listings' },
       { path: 'categories', loadComponent: () => import('./pages/admin/admin-categories/admin-categories').then(m => m.AdminCategories), title: 'Manage Categories' },
-      { path: 'reports', loadComponent: () => import('./pages/admin/admin-reports/admin-reports').then(m => m.AdminReports), title: 'Manage Reports' }
+      { path: 'reports', loadComponent: () => import('./pages/admin/admin-reports/admin-reports').then(m => m.AdminReports), title: 'Manage Reports' },
+      { path: 'banners', loadComponent: () => import('./pages/admin/admin-banners/admin-banners').then(m => m.AdminBanners), title: 'Manage Banners' },
+      { path: 'cms', loadComponent: () => import('./pages/admin/admin-cms/admin-cms').then(m => m.AdminCms), title: 'Manage CMS' },
+      { path: 'reviews', loadComponent: () => import('./pages/admin/admin-reviews/admin-reviews').then(m => m.AdminReviews), title: 'Manage Reviews' }
     ]
   },
   {

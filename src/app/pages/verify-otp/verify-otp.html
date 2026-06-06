@@ -1,39 +1,45 @@
-<div class="auth-container">
-  <div class="auth-card">
-    <div class="auth-header">
-      <h2>Verify OTP</h2>
-      <p>Enter the OTP sent to {{ email }}</p>
-    </div>
+<div class="auth-layout">
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <a routerLink="/" class="auth-logo">OLX</a>
+        <h1 class="auth-title">Verify OTP</h1>
+        <p class="auth-subtitle">Enter the OTP sent to {{ email }}</p>
+      </div>
 
-    <form [formGroup]="verifyForm" (ngSubmit)="onSubmit()" class="auth-form">
-      <div class="form-group">
-        <label for="otp">One Time Password</label>
-        <div class="input-container">
+      <form class="auth-form" [formGroup]="verifyForm" (ngSubmit)="onSubmit()">
+        <div class="form-group mb-4">
+          <label class="form-label" for="otp">One Time Password</label>
           <input 
             type="text" 
             id="otp" 
+            class="form-input" 
             formControlName="otp" 
             placeholder="Enter OTP"
-            [class.is-invalid]="verifyForm.get('otp')?.invalid && verifyForm.get('otp')?.touched"
+            [class.error]="verifyForm.get('otp')?.invalid && verifyForm.get('otp')?.touched"
           >
+          @if (verifyForm.get('otp')?.invalid && verifyForm.get('otp')?.touched) {
+            <div class="error-text">
+              <span *ngIf="verifyForm.get('otp')?.errors?.['required']">OTP is required</span>
+              <span *ngIf="verifyForm.get('otp')?.errors?.['minlength']">OTP is too short</span>
+            </div>
+          }
         </div>
-        <div class="error-message" *ngIf="verifyForm.get('otp')?.invalid && verifyForm.get('otp')?.touched">
-          <span *ngIf="verifyForm.get('otp')?.errors?.['required']">OTP is required</span>
-          <span *ngIf="verifyForm.get('otp')?.errors?.['minlength']">OTP is too short</span>
+
+        @if (errorMessage) {
+          <div class="error-text mb-4" style="text-align: center; font-size: 14px;">
+            {{ errorMessage }}
+          </div>
+        }
+
+        <button type="submit" class="btn-primary w-100 login-btn" [disabled]="verifyForm.invalid">
+          Verify Account
+        </button>
+
+        <div class="auth-footer">
+          Didn't receive the code? <a href="javascript:void(0)" (click)="resendOtp()">Resend OTP</a>
         </div>
-      </div>
-
-      <div class="error-banner" *ngIf="errorMessage">
-        {{ errorMessage }}
-      </div>
-
-      <button type="submit" class="btn btn-primary btn-block" [disabled]="verifyForm.invalid">
-        Verify Account
-      </button>
-
-      <div class="auth-footer">
-        <p>Didn't receive the code? <a href="javascript:void(0)" (click)="resendOtp()">Resend OTP</a></p>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
 </div>

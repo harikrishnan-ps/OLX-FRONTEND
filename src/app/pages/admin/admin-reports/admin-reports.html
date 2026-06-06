@@ -1,1 +1,59 @@
-<p>admin-reports works!</p>
+<div class="admin-page">
+  <div class="header">
+    <h1>Manage Reports</h1>
+    <p>Review and resolve user reports regarding listings or behavior.</p>
+  </div>
+
+  <div class="card">
+    @if (isLoading) {
+      <div class="loading">Loading reports...</div>
+    } @else {
+      <div class="table-responsive">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Listing / Target</th>
+              <th>Reason</th>
+              <th>Description</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (report of reports; track report.id) {
+              <tr>
+                <td><strong>{{ report.listingTitle || report.listingId }}</strong></td>
+                <td>{{ report.reason }}</td>
+                <td class="desc-cell">{{ report.description }}</td>
+                <td>
+                  <span class="badge" 
+                    [class.badge-warning]="report.status === 'Pending'" 
+                    [class.badge-success]="report.status === 'Reviewed' || report.status === 'Resolved'">
+                    {{ report.status }}
+                  </span>
+                </td>
+                <td>{{ report.createdAt | date:'shortDate' }}</td>
+                <td>
+                  @if (report.status === 'Pending') {
+                    <div class="action-buttons">
+                      <button class="btn btn-sm btn-primary" (click)="resolveReport(report.id, 'Reviewed')">Mark Reviewed</button>
+                      <button class="btn btn-sm btn-error" (click)="resolveReport(report.id, 'Resolved')">Resolve</button>
+                    </div>
+                  } @else {
+                    <span class="text-on-surface-variant text-sm">Actioned</span>
+                  }
+                </td>
+              </tr>
+            }
+            @if (reports.length === 0) {
+              <tr>
+                <td colspan="6" class="text-center">No reports found.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</div>

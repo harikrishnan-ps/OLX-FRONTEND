@@ -1,1 +1,81 @@
-<p>admin-listings works!</p>
+<div class="admin-page">
+  <div class="header">
+    <h1>Manage Listings</h1>
+    <p>Review, approve, reject, or feature classified ads.</p>
+  </div>
+
+  <div class="card">
+    <div class="toolbar">
+      <div class="search-bar">
+        <input type="text" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()" placeholder="Search title..." class="form-control">
+        <select [(ngModel)]="statusFilter" (change)="onSearch()" class="form-control">
+          <option value="">All Statuses</option>
+          <option value="Active">Active</option>
+          <option value="Pending">Pending</option>
+          <option value="Rejected">Rejected</option>
+        </select>
+        <button class="btn btn-primary" (click)="onSearch()">Filter</button>
+      </div>
+    </div>
+
+    @if (isLoading) {
+      <div class="loading">Loading listings...</div>
+    } @else {
+      <div class="table-responsive">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Price</th>
+              <th>Status</th>
+              <th>Featured</th>
+              <th>Posted Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (listing of listings; track listing.id) {
+              <tr>
+                <td><strong>{{ listing.title }}</strong></td>
+                <td>{{ listing.price | currency }}</td>
+                <td>
+                  <span class="badge" 
+                    [class.badge-success]="listing.status === 'Active'" 
+                    [class.badge-warning]="listing.status === 'Pending'"
+                    [class.badge-error]="listing.status === 'Rejected'">
+                    {{ listing.status }}
+                  </span>
+                </td>
+                <td>
+                  <input type="checkbox" [checked]="listing.isFeatured" (change)="updateStatus(listing.id, listing.status, !listing.isFeatured)">
+                </td>
+                <td>{{ listing.createdAt | date:'shortDate' }}</td>
+                <td>
+                  <div class="action-buttons">
+                    <select class="form-control select-sm" [ngModel]="listing.status" (ngModelChange)="updateStatus(listing.id, $event, listing.isFeatured)">
+                      <option value="Active">Approve</option>
+                      <option value="Rejected">Reject</option>
+                      <option value="Pending">Pending</option>
+                    </select>
+                    <button class="btn btn-sm btn-error" (click)="deleteListing(listing.id)">Delete</button>
+                  </div>
+                </td>
+              </tr>
+            }
+            @if (listings.length === 0) {
+              <tr>
+                <td colspan="6" class="text-center">No listings found.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="pagination">
+        <button class="btn btn-sm" [disabled]="page === 1" (click)="prevPage()">Previous</button>
+        <span>Page {{ page }}</span>
+        <button class="btn btn-sm" [disabled]="listings.length < pageSize" (click)="nextPage()">Next</button>
+      </div>
+    }
+  </div>
+</div>

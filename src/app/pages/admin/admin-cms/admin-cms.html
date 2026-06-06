@@ -1,0 +1,31 @@
+<div class="admin-page">
+  <div class="header">
+    <h1>Manage CMS Pages</h1>
+    <p>Update static content for your site like Terms of Service and Privacy Policy.</p>
+  </div>
+
+  <div class="card">
+    <div class="form-group mb-4">
+      <label>Select Page to Edit</label>
+      <select [(ngModel)]="selectedSlug" (change)="onSlugChange()" class="form-control">
+        @for (slug of slugs; track slug) {
+          <option [value]="slug">{{ slug }}</option>
+        }
+      </select>
+    </div>
+
+    <form (ngSubmit)="savePage()" class="cms-form">
+      <div class="form-group">
+        <label>Page Title</label>
+        <input type="text" [(ngModel)]="pageData.title" name="title" required class="form-control">
+      </div>
+      <div class="form-group">
+        <label>HTML Content</label>
+        <textarea [(ngModel)]="pageData.htmlContent" name="htmlContent" required rows="15" class="form-control"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary" [disabled]="isLoading || !pageData.title || !pageData.htmlContent">
+        {{ isLoading ? 'Saving...' : 'Save Changes' }}
+      </button>
+    </form>
+  </div>
+</div>

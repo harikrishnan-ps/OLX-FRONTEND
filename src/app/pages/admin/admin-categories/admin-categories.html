@@ -1,1 +1,71 @@
-<p>admin-categories works!</p>
+<div class="admin-page">
+  <div class="header">
+    <h1>Manage Categories</h1>
+    <p>Create and organize the category tree for listings.</p>
+  </div>
+
+  <div class="card">
+    <h3>Add New Category</h3>
+    <form (ngSubmit)="createCategory()" class="category-form mt-4">
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" [(ngModel)]="newCategory.name" name="name" required placeholder="e.g. Properties" class="form-control">
+      </div>
+      <div class="form-group">
+        <label>Icon URL / Material Icon Name</label>
+        <input type="text" [(ngModel)]="newCategory.iconUrl" name="iconUrl" placeholder="e.g. home" class="form-control">
+      </div>
+      <div class="form-group">
+        <label>Parent Category</label>
+        <select [(ngModel)]="newCategory.parentCategoryId" name="parentCategoryId" class="form-control">
+          <option [ngValue]="null">None (Top Level)</option>
+          @for (cat of categories; track cat.id) {
+            <option [ngValue]="cat.id">{{ cat.name }}</option>
+          }
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary" [disabled]="isSubmitting || !newCategory.name">
+        {{ isSubmitting ? 'Saving...' : 'Add Category' }}
+      </button>
+    </form>
+  </div>
+
+  <div class="card mt-4">
+    <h3>Existing Categories</h3>
+    @if (isLoading) {
+      <div class="loading">Loading categories...</div>
+    } @else {
+      <div class="table-responsive">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Icon</th>
+              <th>Name</th>
+              <th>Parent ID</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (cat of categories; track cat.id) {
+              <tr>
+                <td>{{ cat.id }}</td>
+                <td><span class="material-symbols-outlined">{{ cat.iconUrl }}</span></td>
+                <td><strong>{{ cat.name }}</strong></td>
+                <td>{{ cat.parentCategoryId || '—' }}</td>
+                <td>
+                  <button class="btn btn-sm btn-error" (click)="deleteCategory(cat.id)">Delete</button>
+                </td>
+              </tr>
+            }
+            @if (categories.length === 0) {
+              <tr>
+                <td colspan="5" class="text-center">No categories found.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</div>

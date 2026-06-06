@@ -49,6 +49,12 @@
           <a href="#" class="forgot-link" (click)="$event.preventDefault()">Forgot password?</a>
         </div>
 
+        @if (serverError) {
+          <div class="error-text mb-4" style="text-align: center; display: block;">
+            {{ serverError }}
+          </div>
+        }
+
         <button type="submit" class="btn-primary w-100 login-btn" [disabled]="!loginForm.valid">
           Log in
         </button>
@@ -60,7 +66,7 @@
 
       <div class="social-login">
         <button class="btn-social">
-          <img src="assets/google-icon.svg" alt="Google" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iIzQyODVGNCIgZD0iTTIyLjU2IDEyLjI1Yy0uMDQtLjY2LS4xNS0xLjMtLjM3LTEuOTJINS42MXYxLjBoMTBBNi42OSA2LjY5IDAgMCAwIDEzLjEgMTMuNWwzLjU2IDIuNzZjMi0xLjg0IDMuMTctNC41NiAzLjE3LTcuNTVabS0xMC41OCA4Yy0yLjA2IDAtMy44MS0uNjctNS4xMi0xLjhsLTMuNDUgMi42N0E5Ljk0IDkuOTQgMCAwIDAgMTIgMjJhMTAuMTYgMTAuMTYgMCAwIDAgNi44MS0yLjcxbC0zLjU2LTIuNzZjLTEuOCAxLjItNC4yMSAxLjc3LTYuMDQuNjRaIi8+PHBhdGggZmlsbD0iIzM0QTg1MyIgZD0iTTEyLjA3IDIwYy0yLjAxIDAtMy43My0uNjYtNS4wMi0xLjc3bC0zLjQ1IDIuNjhBOS45NCA5Ljk0IDAgMCAwIDEyIDIyYzMuMiAwIDYuMDktMS4wOCA4LjE1LTIuOTVsLTMuNTYtMi43NmMtMS4xMS43NC0yLjYgMS4xOC00LjUyIDEuMThaIi8+PHBhdGggZmlsbD0iI0ZCQkMwNSIgZD0iTTcuMDUgMTQuNTRBNi4xNSA2LjE1IDAgMCAxIDYuNjEgMTJhNi4xNSA2LjE1IDAgMCAxIC40NC0yLjU0TDMuNiA2LjdBOTkgOS45IDAgMCAwIDIgMTJhOS45IDkuOSAwIDAgMCAxLjYgNS4zbDMuNDUtMi43NloiLz48cGF0aCBmaWxsPSIjRUE0MzM1IiBkPSJNMTIgNS4zOGMyIDEuMDUgMy4yMiAxLjYzIDMuMjIgMS42M2wzLjUyLTMuNEMxNi42NiAyLjM5IDE0LjQ0IDEuNSAxMiAxLjVhMTAuMTYgMTAuMTYgMCAwIDAgNi44MSAzLjdsMy40NSAyLjY3QzEyLjcgNS45NiAxMC44NCA1LjM4IDEyIDUuMzhaIi8+PC9zdmc+'">
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iIzQyODVGNCIgZD0iTTIyLjU2IDEyLjI1Yy0uMDQtLjY2LS4xNS0xLjMtLjM3LTEuOTJINS42MXYxLjBoMTBBNi42OSA2LjY5IDAgMCAwIDEzLjEgMTMuNWwzLjU2IDIuNzZjMi0xLjg0IDMuMTctNC41NiAzLjE3LTcuNTVabS0xMC41OCA4Yy0yLjA2IDAtMy44MS0uNjctNS4xMi0xLjhsLTMuNDUgMi42N0E5Ljk0IDkuOTQgMCAwIDAgMTIgMjJhMTAuMTYgMTAuMTYgMCAwIDAgNi44MS0yLjcxbC0zLjU2LTIuNzZjLTEuOCAxLjItNC4yMSAxLjc3LTYuMDQuNjRaIi8+PHBhdGggZmlsbD0iIzM0QTg1MyIgZD0iTTEyLjA3IDIwYy0yLjAxIDAtMy43My0uNjYtNS4wMi0xLjc3bC0zLjQ1IDIuNjhBOS45NCA5Ljk0IDAgMCAwIDEyIDIyYzMuMiAwIDYuMDktMS4wOCA4LjE1LTIuOTVsLTMuNTYtMi43NmMtMS4xMS43NC0yLjYgMS4xOC00LjUyIDEuMThaIi8+PHBhdGggZmlsbD0iI0ZCQkMwNSIgZD0iTTcuMDUgMTQuNTRBNi4xNSA2LjE1IDAgMCAxIDYuNjEgMTJhNi4xNSA2LjE1IDAgMCAxIC40NC0yLjU0TDMuNiA2LjdBOTkgOS45IDAgMCAwIDIgMTJhOS45IDkuOSAwIDAgMCAxLjYgNS4zbDMuNDUtMi43NloiLz48cGF0aCBmaWxsPSIjRUE0MzM1IiBkPSJNMTIgNS4zOGMyIDEuMDUgMy4yMiAxLjYzIDMuMjIgMS42M2wzLjUyLTMuNEMxNi42NiAyLjM5IDE0LjQ0IDEuNSAxMiAxLjVhMTAuMTYgMTAuMTYgMCAwIDAgNi44MSAzLjdsMy40NSAyLjY3QzEyLjcgNS45NiAxMC44NCA1LjM4IDEyIDUuMzhaIi8+PC9zdmc+'">
           Continue with Google
         </button>
         <button class="btn-social">

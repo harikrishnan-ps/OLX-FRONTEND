@@ -22,6 +22,12 @@
   box-shadow: var(--shadow-card);
 }
 
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: var(--color-on-surface-variant);
+}
+
 .admin-table {
   width: 100%;
   border-collapse: collapse;
@@ -39,32 +45,20 @@
   background: var(--color-surface-container-low);
 }
 
-.desc-cell {
-  max-width: 250px;
+.comment-cell {
+  max-width: 300px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.badge {
-  padding: 4px 8px;
-  border-radius: var(--radius-full);
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.badge-success {
-  background: #e6f4ea;
-  color: #137333;
-}
-
-.badge-warning {
-  background: #fef7e0;
-  color: #b06000;
+.rating-stars {
+  font-weight: bold;
+  color: #ffb400;
 }
 
 .btn {
-  padding: 6px 12px;
+  padding: 10px 16px;
   border: 1px solid var(--color-outline-variant);
   background: white;
   border-radius: var(--radius-sm);
@@ -73,10 +67,8 @@
   transition: var(--transition-fast);
 }
 
-.btn-primary {
-  background: var(--color-primary);
-  color: var(--color-on-primary);
-  border: none;
+.btn:hover:not(:disabled) {
+  background: var(--color-surface-container-low);
 }
 
 .btn-error {
@@ -85,19 +77,27 @@
   border: none;
 }
 
+.btn-error:hover:not(:disabled) {
+  background: #a31718;
+}
+
 .btn-sm {
+  padding: 6px 12px;
   font-size: 12px;
 }
 
-.action-buttons {
-  display: flex;
-  gap: 8px;
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .text-center {
   text-align: center;
 }
 
-.text-sm {
-  font-size: 12px;
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
 }

@@ -1,1 +1,68 @@
-<p>admin-users works!</p>
+<div class="admin-page">
+  <div class="header">
+    <h1>Manage Users</h1>
+    <p>View, search, block, and remove users from the platform.</p>
+  </div>
+
+  <div class="card">
+    <div class="toolbar">
+      <div class="search-bar">
+        <input type="text" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()" placeholder="Search by name or email..." class="form-control">
+        <button class="btn btn-primary" (click)="onSearch()">Search</button>
+      </div>
+    </div>
+
+    @if (isLoading) {
+      <div class="loading">Loading users...</div>
+    } @else {
+      <div class="table-responsive">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Joined Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (user of users; track user.id) {
+              <tr>
+                <td><strong>{{ user.fullName }}</strong></td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.role }}</td>
+                <td>
+                  <span class="badge" [class.badge-error]="user.isBlocked" [class.badge-success]="!user.isBlocked">
+                    {{ user.isBlocked ? 'Blocked' : 'Active' }}
+                  </span>
+                </td>
+                <td>{{ user.createdAt | date:'shortDate' }}</td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn btn-sm" [class.btn-warning]="!user.isBlocked" [class.btn-success]="user.isBlocked" (click)="blockUser(user.id, user.isBlocked)">
+                      {{ user.isBlocked ? 'Unblock' : 'Block' }}
+                    </button>
+                    <button class="btn btn-sm btn-error" (click)="deleteUser(user.id)">Delete</button>
+                  </div>
+                </td>
+              </tr>
+            }
+            @if (users.length === 0) {
+              <tr>
+                <td colspan="6" class="text-center">No users found.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="pagination">
+        <button class="btn btn-sm" [disabled]="page === 1" (click)="prevPage()">Previous</button>
+        <span>Page {{ page }}</span>
+        <button class="btn btn-sm" [disabled]="users.length < pageSize" (click)="nextPage()">Next</button>
+      </div>
+    }
+  </div>
+</div>

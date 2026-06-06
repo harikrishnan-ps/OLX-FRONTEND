@@ -2,85 +2,91 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { 
+  AdminDashboardStatsDto, UpsertCategoryDto, UpsertStaticPageDto, 
+  CreateBannerDto, BannerDto, BlockUserDto, UpdateListingStatusDto 
+} from '../models/api.models';
 
 @Injectable({ providedIn: 'root' })
 export class AdminService {
   private http = inject(HttpClient);
 
   // Dashboard
-  getStats(): Observable<any> {
-    return this.http.get(`${environment.apiBaseUrl}/admin/dashboard/stats`);
+  getStats(): Observable<AdminDashboardStatsDto> {
+    return this.http.get<AdminDashboardStatsDto>(`${environment.apiUrl}/admin/dashboard/stats`);
   }
   getCharts(): Observable<any> {
-    return this.http.get(`${environment.apiBaseUrl}/admin/dashboard/charts`);
+    return this.http.get<any>(`${environment.apiUrl}/admin/dashboard/charts`);
   }
 
   // Users
   getUsers(params?: any): Observable<any> {
-    return this.http.get(`${environment.apiBaseUrl}/admin/users`, { params });
+    return this.http.get<any>(`${environment.apiUrl}/admin/users`, { params });
   }
   getUser(id: string): Observable<any> {
-    return this.http.get(`${environment.apiBaseUrl}/admin/users/${id}`);
+    return this.http.get<any>(`${environment.apiUrl}/admin/users/${id}`);
   }
-  blockUser(id: string, isBlocked: boolean, reason: string): Observable<any> {
-    return this.http.patch(`${environment.apiBaseUrl}/admin/users/${id}/block`, { isBlocked, reason });
+  blockUser(id: string, isBlocked: boolean, reason: string): Observable<void> {
+    const dto: BlockUserDto = { isBlocked, reason };
+    return this.http.patch<void>(`${environment.apiUrl}/admin/users/${id}/block`, dto);
   }
   deleteUser(id: string): Observable<any> {
-    return this.http.delete(`${environment.apiBaseUrl}/admin/users/${id}`);
+    return this.http.delete(`${environment.apiUrl}/admin/users/${id}`);
   }
 
   // Listings
   getListings(params?: any): Observable<any> {
-    return this.http.get(`${environment.apiBaseUrl}/admin/listings`, { params });
+    return this.http.get<any>(`${environment.apiUrl}/admin/listings`, { params });
   }
-  updateListingStatus(id: string, status: string, isFeatured: boolean): Observable<any> {
-    return this.http.patch(`${environment.apiBaseUrl}/admin/listings/${id}/status`, { status, isFeatured });
+  updateListingStatus(id: string, status: string, isFeatured: boolean): Observable<void> {
+    const dto: UpdateListingStatusDto = { status, isFeatured };
+    return this.http.patch<void>(`${environment.apiUrl}/admin/listings/${id}/status`, dto);
   }
-  deleteListing(id: string): Observable<any> {
-    return this.http.delete(`${environment.apiBaseUrl}/admin/listings/${id}`);
+  deleteListing(id: string): Observable<void> {
+    return this.http.delete<void>(`${environment.apiUrl}/admin/listings/${id}`);
   }
 
   // Reports
   getReports(): Observable<any> {
-    return this.http.get(`${environment.apiBaseUrl}/admin/reports`);
+    return this.http.get<any>(`${environment.apiUrl}/admin/reports`);
   }
   getReport(id: string): Observable<any> {
-    return this.http.get(`${environment.apiBaseUrl}/admin/reports/${id}`);
+    return this.http.get<any>(`${environment.apiUrl}/admin/reports/${id}`);
   }
-  resolveReport(id: string, status: string): Observable<any> {
+  resolveReport(id: string, status: string): Observable<void> {
     const params = new HttpParams().set('status', status);
-    return this.http.patch(`${environment.apiBaseUrl}/admin/reports/${id}/resolve`, {}, { params });
+    return this.http.patch<void>(`${environment.apiUrl}/admin/reports/${id}/resolve`, {}, { params });
   }
 
   // Reviews
   getReviews(params?: any): Observable<any> {
-    return this.http.get(`${environment.apiBaseUrl}/admin/reviews`, { params });
+    return this.http.get<any>(`${environment.apiUrl}/admin/reviews`, { params });
   }
-  deleteReview(id: string): Observable<any> {
-    return this.http.delete(`${environment.apiBaseUrl}/admin/reviews/${id}`);
+  deleteReview(id: string): Observable<void> {
+    return this.http.delete<void>(`${environment.apiUrl}/admin/reviews/${id}`);
   }
 
   // Categories
-  createCategory(data: any): Observable<any> {
-    return this.http.post(`${environment.apiBaseUrl}/admin/categories`, data);
+  createCategory(data: UpsertCategoryDto): Observable<void> {
+    return this.http.post<void>(`${environment.apiUrl}/admin/categories`, data);
   }
-  updateCategory(id: number, data: any): Observable<any> {
-    return this.http.put(`${environment.apiBaseUrl}/admin/categories/${id}`, data);
+  updateCategory(id: number, data: UpsertCategoryDto): Observable<void> {
+    return this.http.put<void>(`${environment.apiUrl}/admin/categories/${id}`, data);
   }
-  deleteCategory(id: number): Observable<any> {
-    return this.http.delete(`${environment.apiBaseUrl}/admin/categories/${id}`);
+  deleteCategory(id: number): Observable<void> {
+    return this.http.delete<void>(`${environment.apiUrl}/admin/categories/${id}`);
   }
 
   // CMS
-  updateCms(slug: string, data: any): Observable<any> {
-    return this.http.put(`${environment.apiBaseUrl}/admin/cms/${slug}`, data);
+  updateCms(slug: string, data: UpsertStaticPageDto): Observable<void> {
+    return this.http.put<void>(`${environment.apiUrl}/admin/cms/${slug}`, data);
   }
 
   // Banners
-  createBanner(data: any): Observable<any> {
-    return this.http.post(`${environment.apiBaseUrl}/admin/banners`, data);
+  createBanner(data: CreateBannerDto): Observable<BannerDto> {
+    return this.http.post<BannerDto>(`${environment.apiUrl}/admin/banners`, data);
   }
-  deleteBanner(id: number): Observable<any> {
-    return this.http.delete(`${environment.apiBaseUrl}/admin/banners/${id}`);
+  deleteBanner(id: number): Observable<void> {
+    return this.http.delete<void>(`${environment.apiUrl}/admin/banners/${id}`);
   }
 }

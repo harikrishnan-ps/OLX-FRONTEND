@@ -3,16 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { User, LoginCredentials, RegisterData } from '../models/user.model';
 import { environment } from '../../../environments/environment';
-
-export interface AuthResponse {
-  token: string;
-  refreshToken: string;
-  user: User;
-}
+import { RegisterDto, LoginDto, AuthResponseDto, UserDto } from '../models/api.models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly _currentUser = signal<User | null>(null);
+  private readonly _currentUser = signal<UserDto | null>(null);
   private readonly _token = signal<string | null>(null);
   private http = inject(HttpClient);
 
@@ -28,62 +23,68 @@ export class AuthService {
     }
   }
 
-  login(credentials: LoginCredentials): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${environment.apiBaseUrl}/auth/login`, {
+  login(credentials: LoginCredentials): Observable<AuthResponseDto> {
+    const loginDto: LoginDto = {
       identifier: credentials.email,
       password: credentials.password
-    }).pipe(
+    };
+    return this.http.post<AuthResponseDto>(`${environment.apiUrl}/auth/login`, loginDto).pipe(
       tap(res => this.handleAuthResponse(res, credentials.rememberMe))
     );
   }
 
   register(data: RegisterData): Observable<void> {
-    return this.http.post<void>(`${environment.apiBaseUrl}/auth/register`, {
+    const registerDto: RegisterDto = {
       fullName: data.fullName,
       email: data.email,
       phoneNumber: data.phone,
       password: data.password,
       confirmPassword: data.password // Assuming the form pre-validates this
-    });
+    };
+    return this.http.post<void>(`${environment.apiUrl}/auth/register`, registerDto);
   }
 
-  verifyOtp(email: string, otp: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${environment.apiBaseUrl}/auth/verify-otp`, { email, otp }).pipe(
+  verifyOtp(email: string, otp: string): Observable<AuthResponseDto> {
+    return this.http.post<AuthResponseDto>(`${environment.apiUrl}/auth/verify-otp`, { email, otp }).pipe(
       tap(res => this.handleAuthResponse(res, true))
     );
   }
 
   resendOtp(email: string): Observable<void> {
-    return this.http.post<void>(`${environment.apiBaseUrl}/auth/resend-otp`, { email });
+    return this.http.post<void>(`${environment.apiUrl}/auth/resend-otp`, { email });
   }
 
   forgotPassword(email: string): Observable<void> {
-    return this.http.post<void>(`${environment.apiBaseUrl}/auth/forgot-password`, { email });
+    return this.http.post<void>(`${environment.apiUrl}/auth/forgot-password`, { email });
   }
 
   resetPassword(email: string, otp: string, newPassword: string): Observable<void> {
-    return this.http.post<void>(`${environment.apiBaseUrl}/auth/reset-password`, {
+    return this.http.post<void>(`${environment.apiUrl}/auth/reset-password`, {
       email, otp, newPassword
     });
   }
 
   logout(): void {
-    this.http.post(`${environment.apiBaseUrl}/auth/logout`, {}).subscribe({
+    this.http.post(`${environment.apiUrl}/auth/logout`, {}).subscribe({
       next: () => this.clearSession(),
       error: () => this.clearSession() // Clear local session even if server logout fails
     });
   }
 
-  private handleAuthResponse(res: AuthResponse, rememberMe: boolean = false) {
-    this._currentUser.set(res.user);
-    this._token.set(res.token);
+  private handleAuthResponse(res: AuthResponseDto, rememberMe: boolean = false) {
+    if (res.user) {
+      this._currentUser.set(res.user);
+    }
+    if (res.token) {
+      this._token.set(res.token);
+    }
 
     if (rememberMe) {
-      localStorage.setItem('olx_user', JSON.stringify(res.user));
-      localStorage.setItem('olx_token', res.token);
+      if (res.user) localStorage.setItem('olx_user', JSON.stringify(res.user));
+      if (res.token) localStorage.setItem('olx_token', res.token);
     } else {
-      sessionStorage.setItem('olx_user', JSON.stringify(res.user));
-      sessionStorage.setItem('olx_token', res.token);
+      if (res.user) sessionStorage.setItem('olx_user', JSON.stringify(res.user));
+      if (res.token) sessionStorage.setItem('olx_token', res.token);
     }
   }
 

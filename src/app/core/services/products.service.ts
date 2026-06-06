@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { Product, ProductFilter, ProductSearchResult } from '../models/product.model';
+import { ListingResponseDto, ListingResponseDtoPagedResultDto, CreateListingDto, UpdateListingDto } from '../models/api.models';
+import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class ProductsService {
@@ -26,15 +28,46 @@ export class ProductsService {
     }
 
     this._loading.set(true);
-    return this.http.get<ProductSearchResult>(`${environment.apiBaseUrl}/listings`, { params }).pipe(
-      tap(() => this._loading.set(false))
+    return this.http.get<ListingResponseDtoPagedResultDto>(`${environment.apiUrl}/listings`, { params }).pipe(
+      tap(() => this._loading.set(false)),
+      map(res => this.mapPagedResultToSearchResult(res))
     );
+  }
+
+  private mapListingToProduct(dto: ListingResponseDto): Product {
+    return {
+      id: dto.id || '',
+      title: dto.title || '',
+      description: dto.description || '',
+      price: dto.price || 0,
+      currency: 'USD', // default
+      images: [], // Needs separate fetch or included in detailed DTO
+      category: dto.categoryId?.toString() || '',
+      categorySlug: dto.categoryId?.toString() || '',
+      condition: (dto.condition as any) || 'used-good',
+      location: { city: dto.cityId?.toString() || '' },
+      seller: { id: '', name: 'Unknown Seller' }, // Need user details
+      status: (dto.status as any) || 'active',
+      featured: dto.isFeatured,
+      postedAt: dto.createdAt || new Date().toISOString()
+    };
+  }
+
+  private mapPagedResultToSearchResult(dto: ListingResponseDtoPagedResultDto): ProductSearchResult {
+    return {
+      items: (dto.items || []).map(item => this.mapListingToProduct(item)),
+      total: dto.totalCount || 0,
+      page: dto.page || 1,
+      pageSize: dto.pageSize || 20,
+      totalPages: Math.ceil((dto.totalCount || 0) / (dto.pageSize || 20))
+    };
   }
 
   getProductById(id: string): Observable<Product> {
     this._loading.set(true);
-    return this.http.get<Product>(`${environment.apiBaseUrl}/listings/${id}`).pipe(
-      tap(() => this._loading.set(false))
+    return this.http.get<ListingResponseDto>(`${environment.apiUrl}/listings/${id}`).pipe(
+      tap(() => this._loading.set(false)),
+      map(res => this.mapListingToProduct(res))
     );
   }
 
@@ -42,33 +75,62 @@ export class ProductsService {
     // API doesn't have a dedicated featured endpoint, so we fetch listings with a 'featured' sort/filter 
     // or just fetch first page. Let's assume we can pass a featured param or rely on the backend.
     let params = new HttpParams().set('PageSize', '8');
-    return this.http.get<ProductSearchResult>(`${environment.apiBaseUrl}/listings`, { params });
+    return this.http.get<ListingResponseDtoPagedResultDto>(`${environment.apiUrl}/listings`, { params }).pipe(
+      map(res => this.mapPagedResultToSearchResult(res))
+    );
   }
 
   getRelatedProducts(productId: string, categoryId: string): Observable<ProductSearchResult> {
     let params = new HttpParams()
       .set('CategoryId', categoryId)
       .set('PageSize', '4');
-    return this.http.get<ProductSearchResult>(`${environment.apiBaseUrl}/listings`, { params });
+    return this.http.get<ListingResponseDtoPagedResultDto>(`${environment.apiUrl}/listings`, { params }).pipe(
+      map(res => this.mapPagedResultToSearchResult(res))
+    );
   }
 
   createProduct(data: any): Observable<Product> {
-    return this.http.post<Product>(`${environment.apiBaseUrl}/listings`, data);
+    // Basic mapping for creation
+    const dto: CreateListingDto = {
+      title: data.title,
+      description: data.description,
+      price: data.price,
+      categoryId: data.categoryId,
+      cityId: data.cityId,
+      condition: data.condition
+    };
+    return this.http.post<ListingResponseDto>(`${environment.apiUrl}/listings`, dto).pipe(
+      map(res => this.mapListingToProduct(res))
+    );
   }
 
   updateProduct(id: string, data: any): Observable<Product> {
-    return this.http.put<Product>(`${environment.apiBaseUrl}/listings/${id}`, data);
+    const dto: UpdateListingDto = {
+      title: data.title,
+      description: data.description,
+      price: data.price,
+      categoryId: data.categoryId,
+      cityId: data.cityId,
+      condition: data.condition
+    };
+    return this.http.put<ListingResponseDto>(`${environment.apiUrl}/listings/${id}`, dto).pipe(
+      map(res => this.mapListingToProduct(res))
+    );
   }
 
   deleteProduct(id: string): Observable<void> {
-    return this.http.delete<void>(`${environment.apiBaseUrl}/listings/${id}`);
+    return this.http.delete<void>(`${environment.apiUrl}/listings/${id}`);
   }
 
   markAsSold(id: string): Observable<Product> {
-    return this.http.patch<Product>(`${environment.apiBaseUrl}/listings/${id}/sold`, {});
+    return this.http.patch<ListingResponseDto>(`${environment.apiUrl}/listings/${id}/sold`, {}).pipe(
+      map(res => this.mapListingToProduct(res))
+    );
   }
 
   boostProduct(id: string): Observable<Product> {
-    return this.http.patch<Product>(`${environment.apiBaseUrl}/listings/${id}/boost`, {});
+    return this.http.patch<ListingResponseDto>(`${environment.apiUrl}/listings/${id}/boost`, {}).pipe(
+      map(res => this.mapListingToProduct(res))
+    );
   }
 }
