@@ -27,13 +27,9 @@ export class AdminReports implements OnInit {
         this.reports = data.items || data || [];
         this.isLoading = false;
       },
-      error: () => {
+      error: (err) => {
         this.isLoading = false;
-        // Mock data
-        this.reports = [
-          { id: '1', listingId: '101', listingTitle: 'Fake iPhone', reason: 'Scam', description: 'User asking for money upfront.', status: 'Pending', createdAt: new Date() },
-          { id: '2', listingId: '102', listingTitle: 'Offensive Ad', reason: 'Inappropriate Content', description: 'Image contains offensive material.', status: 'Reviewed', createdAt: new Date() }
-        ];
+        console.error('Failed to load reports', err);
       }
     });
   }

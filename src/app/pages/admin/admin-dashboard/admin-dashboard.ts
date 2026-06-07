@@ -20,15 +20,9 @@ export class AdminDashboard implements OnInit {
         this.stats = data;
         this.isLoading = false;
       },
-      error: () => {
+      error: (err) => {
         this.isLoading = false;
-        // Mock data for display purposes since we don't have backend
-        this.stats = {
-          totalUsers: 1250,
-          activeListings: 4320,
-          pendingReports: 12,
-          totalRevenue: 15400
-        };
+        console.error('Failed to load dashboard stats', err);
       }
     });
   }

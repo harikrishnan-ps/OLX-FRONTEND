@@ -41,7 +41,7 @@ export class ProductsService {
       description: dto.description || '',
       price: dto.price || 0,
       currency: 'USD', // default
-      images: [], // Needs separate fetch or included in detailed DTO
+      images: dto.images ? dto.images.map((i: any) => i.url) : [],
       category: dto.categoryId?.toString() || '',
       categorySlug: dto.categoryId?.toString() || '',
       condition: (dto.condition as any) || 'used-good',
@@ -61,6 +61,14 @@ export class ProductsService {
       pageSize: dto.pageSize || 20,
       totalPages: Math.ceil((dto.totalCount || 0) / (dto.pageSize || 20))
     };
+  }
+
+  getMyProducts(): Observable<Product[]> {
+    this._loading.set(true);
+    return this.http.get<ListingResponseDto[]>(`${environment.apiUrl}/listings/my`).pipe(
+      tap(() => this._loading.set(false)),
+      map(res => (res || []).map(item => this.mapListingToProduct(item)))
+    );
   }
 
   getProductById(id: string): Observable<Product> {
@@ -97,7 +105,9 @@ export class ProductsService {
       price: data.price,
       categoryId: data.categoryId,
       cityId: data.cityId,
-      condition: data.condition
+      condition: data.condition,
+      isNegotiable: data.isNegotiable || false,
+      status: data.status
     };
     return this.http.post<ListingResponseDto>(`${environment.apiUrl}/listings`, dto).pipe(
       map(res => this.mapListingToProduct(res))
@@ -111,7 +121,9 @@ export class ProductsService {
       price: data.price,
       categoryId: data.categoryId,
       cityId: data.cityId,
-      condition: data.condition
+      condition: data.condition,
+      isNegotiable: data.isNegotiable || false,
+      status: data.status || 'Active'
     };
     return this.http.put<ListingResponseDto>(`${environment.apiUrl}/listings/${id}`, dto).pipe(
       map(res => this.mapListingToProduct(res))

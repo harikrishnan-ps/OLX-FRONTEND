@@ -16,7 +16,7 @@
           <select class="form-input" formControlName="category" [class.error]="adForm.get('category')?.invalid && adForm.get('category')?.touched">
             <option value="" disabled selected>Select a category</option>
             @for (cat of categoriesService.categories(); track cat.id) {
-              <option [value]="cat.slug">{{ cat.name }}</option>
+              <option [value]="cat.id">{{ cat.name }}</option>
             }
           </select>
           @if (adForm.get('category')?.invalid && adForm.get('category')?.touched) {
@@ -66,7 +66,7 @@
       <!-- Photos -->
       <div class="form-card mt-4">
         <h2 class="card-title">Upload up to 12 photos</h2>
-        <app-image-upload (urlsChange)="onImagesChange($event)"></app-image-upload>
+        <app-image-upload (filesChange)="onImagesChange($event)"></app-image-upload>
       </div>
 
       <!-- Location -->

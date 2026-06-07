@@ -1,1 +1,44 @@
-<p>my-ads-dashboard works!</p>
+<div class="page-with-navbar-and-bottom-nav">
+  <div class="container section-padding">
+    <div class="dashboard-header">
+      <h2>My Ads</h2>
+      <a routerLink="/post-ad" class="btn btn-primary">Post an Ad</a>
+    </div>
+
+    @if (isLoading) {
+      <div class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading your ads...</p>
+      </div>
+    } @else if (myProducts.length === 0) {
+      <div class="empty-state text-center" style="padding-top: 60px;">
+        <span class="material-symbols-outlined" style="font-size: 64px; color: var(--color-outline);">inventory_2</span>
+        <h3>No Ads Yet</h3>
+        <p style="color: var(--color-outline);">You haven't posted any active ads right now.</p>
+        <a routerLink="/post-ad" class="btn btn-primary mt-3">Start Selling</a>
+      </div>
+    } @else {
+      <div class="ads-list">
+        @for (product of myProducts; track product.id) {
+          <div class="ad-card">
+            <div class="ad-image">
+              <img [src]="product.images?.length ? product.images[0] : 'https://placehold.co/150'" [alt]="product.title">
+              <span class="status-badge" [class]="'status-' + product.status.toLowerCase()">{{ product.status }}</span>
+            </div>
+            <div class="ad-details">
+              <h4>{{ product.title }}</h4>
+              <p class="price">{{ product.price | currency }}</p>
+              <p class="date">Posted: {{ product.postedAt | date:'mediumDate' }}</p>
+            </div>
+            <div class="ad-actions">
+              @if (product.status !== 'Sold' && product.status !== 'Deleted') {
+                <button class="btn btn-outline-primary btn-sm" (click)="markAsSold(product.id)">Mark Sold</button>
+              }
+              <button class="btn btn-error btn-sm" (click)="deleteAd(product.id)">Delete</button>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

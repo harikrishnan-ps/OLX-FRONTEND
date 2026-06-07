@@ -72,18 +72,24 @@ export class AuthService {
   }
 
   private handleAuthResponse(res: AuthResponseDto, rememberMe: boolean = false) {
-    if (res.user) {
-      this._currentUser.set(res.user);
+    const user = {
+      email: res.email,
+      fullName: res.fullName,
+      role: res.role
+    };
+
+    if (res.email) {
+      this._currentUser.set(user);
     }
     if (res.token) {
       this._token.set(res.token);
     }
 
     if (rememberMe) {
-      if (res.user) localStorage.setItem('olx_user', JSON.stringify(res.user));
+      if (res.email) localStorage.setItem('olx_user', JSON.stringify(user));
       if (res.token) localStorage.setItem('olx_token', res.token);
     } else {
-      if (res.user) sessionStorage.setItem('olx_user', JSON.stringify(res.user));
+      if (res.email) sessionStorage.setItem('olx_user', JSON.stringify(user));
       if (res.token) sessionStorage.setItem('olx_token', res.token);
     }
   }

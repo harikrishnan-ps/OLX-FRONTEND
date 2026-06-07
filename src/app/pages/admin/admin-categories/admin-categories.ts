@@ -33,18 +33,13 @@ export class AdminCategories implements OnInit {
   loadCategories() {
     this.isLoading = true;
     this.categoriesService.getCategories().subscribe({
-      next: (data) => {
+      next: (data: any[]) => {
         this.categories = data;
         this.isLoading = false;
       },
-      error: () => {
+      error: (err) => {
         this.isLoading = false;
-        // Mock data
-        this.categories = [
-          { id: 1, name: 'Cars', iconUrl: 'directions_car', parentCategoryId: null },
-          { id: 2, name: 'Mobiles', iconUrl: 'smartphone', parentCategoryId: null },
-          { id: 3, name: 'Sedan', iconUrl: '', parentCategoryId: 1 }
-        ];
+        console.error('Failed to load categories', err);
       }
     });
   }
@@ -58,14 +53,10 @@ export class AdminCategories implements OnInit {
         this.newCategory = { name: '', iconUrl: '', parentCategoryId: null };
         this.loadCategories();
       },
-      error: () => {
+      error: (err) => {
         this.isSubmitting = false;
+        console.error('Failed to create category', err);
         alert('Failed to create category');
-        
-        // Mock fallback to update UI
-        const id = Math.max(...this.categories.map(c => c.id)) + 1;
-        this.categories.push({ ...this.newCategory, id });
-        this.newCategory = { name: '', iconUrl: '', parentCategoryId: null };
       }
     });
   }
@@ -76,10 +67,9 @@ export class AdminCategories implements OnInit {
         next: () => {
           this.categories = this.categories.filter(c => c.id !== id);
         },
-        error: () => {
+        error: (err) => {
+          console.error('Failed to delete category', err);
           alert('Failed to delete category');
-          // Mock delete
-          this.categories = this.categories.filter(c => c.id !== id);
         }
       });
     }

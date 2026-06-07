@@ -17,7 +17,7 @@ export interface Product {
   views?: number;
   favorites?: number;
   isFavorited?: boolean;
-  status: 'active' | 'sold' | 'expired' | 'pending';
+  status: string;
 }
 
 export interface ProductLocation {

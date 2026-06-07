@@ -1,7 +1,7 @@
 <header class="navbar" role="banner">
   <nav class="navbar__inner" aria-label="Main navigation">
     <!-- Logo -->
-    <a class="navbar__logo" routerLink="/" aria-label="OLX Home">OLX</a>
+    <a class="navbar__logo" [routerLink]="authService.currentUser()?.role?.toLowerCase() === 'admin' ? '/admin' : '/'" aria-label="OLX Home">OLX</a>
 
     <!-- Desktop Nav Links -->
     <div class="navbar__links hidden-mobile">
@@ -66,7 +66,7 @@
 
 <!-- Mobile Bottom Nav Bar -->
 <nav class="bottom-nav hidden-desktop" aria-label="Mobile navigation">
-  <a class="bottom-nav__item" routerLink="/" routerLinkActive="bottom-nav__item--active" [routerLinkActiveOptions]="{ exact: true }">
+  <a class="bottom-nav__item" [routerLink]="authService.currentUser()?.role?.toLowerCase() === 'admin' ? '/admin' : '/'" routerLinkActive="bottom-nav__item--active" [routerLinkActiveOptions]="{ exact: true }">
     <span class="material-symbols-outlined">home</span>
     <span class="bottom-nav__label">Home</span>
   </a>

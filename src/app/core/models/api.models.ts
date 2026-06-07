@@ -45,7 +45,10 @@ export interface UserDto {
 export interface AuthResponseDto {
   token?: string;
   refreshToken?: string;
-  user?: UserDto;
+  tokenExpiresAt?: string;
+  email?: string;
+  fullName?: string;
+  role?: string;
 }
 
 export interface ChangePasswordDto {
@@ -81,6 +84,7 @@ export interface CreateListingDto {
   categoryId?: number;
   condition?: string;
   specificationsJson?: string;
+  status?: string;
 }
 
 export interface UpdateListingDto {
@@ -106,6 +110,7 @@ export interface ListingResponseDto {
   cityId?: number;
   categoryId?: number;
   createdAt?: string;
+  images?: ListingImageDto[];
 }
 
 export interface ListingResponseDtoPagedResultDto {
@@ -162,13 +167,13 @@ export interface AdminDashboardStatsDto {
 }
 
 export interface CreateReportDto {
-  listingId?: string;
+  reportedListingId?: string;
   reason?: string;
   description?: string;
 }
 
 export interface CreateReviewDto {
-  sellerId?: string;
+  targetUserId?: string;
   rating?: number;
   comment?: string;
 }

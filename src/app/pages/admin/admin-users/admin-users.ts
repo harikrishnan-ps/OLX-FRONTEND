@@ -36,14 +36,9 @@ export class AdminUsers implements OnInit {
         this.totalCount = data.totalCount || this.users.length;
         this.isLoading = false;
       },
-      error: () => {
+      error: (err) => {
         this.isLoading = false;
-        // Mock data
-        this.users = [
-          { id: '1', fullName: 'John Doe', email: 'john@example.com', role: 'User', isBlocked: false, createdAt: new Date() },
-          { id: '2', fullName: 'Jane Smith', email: 'jane@example.com', role: 'User', isBlocked: true, createdAt: new Date() }
-        ];
-        this.totalCount = 2;
+        console.error('Failed to load users', err);
       }
     });
   }

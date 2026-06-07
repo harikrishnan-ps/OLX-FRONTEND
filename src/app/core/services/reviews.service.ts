@@ -12,8 +12,8 @@ export class ReviewsService {
     return this.http.get<any[]>(`${environment.apiUrl}/reviews/seller/${userId}`);
   }
 
-  createReview(listingId: string, rating: number, comment: string): Observable<void> {
-    const dto: CreateReviewDto = { sellerId: listingId, rating, comment };
+  createReview(sellerId: string, rating: number, comment: string): Observable<void> {
+    const dto: CreateReviewDto = { targetUserId: sellerId, rating, comment };
     return this.http.post<void>(`${environment.apiUrl}/reviews`, dto);
   }
 }

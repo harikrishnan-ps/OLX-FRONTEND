@@ -5,6 +5,7 @@ import { ProductsService } from '../../core/services/products.service';
 import { Product } from '../../core/models/product.model';
 import { ProductCard } from '../../shared/product-card/product-card';
 import { FilterSidebar } from '../../shared/filter-sidebar/filter-sidebar';
+import { CategoriesService } from '../../core/services/categories.service';
 
 @Component({
   selector: 'app-category-page-cars',
@@ -15,6 +16,8 @@ import { FilterSidebar } from '../../shared/filter-sidebar/filter-sidebar';
 export class CategoryPageCars implements OnInit {
   route = inject(ActivatedRoute);
   productsService = inject(ProductsService);
+
+  categoriesService = inject(CategoriesService);
 
   searchQuery = '';
   products: Product[] = [];
@@ -29,7 +32,11 @@ export class CategoryPageCars implements OnInit {
 
   fetchResults(): void {
     this.isLoading = true;
-    this.productsService.getProducts({ category: this.searchQuery }).subscribe({
+    const cats = this.categoriesService.categories();
+    const category = cats.find(c => c.slug === this.searchQuery || c.id === this.searchQuery);
+    const categoryId = category ? category.id : this.searchQuery;
+
+    this.productsService.getProducts({ category: categoryId }).subscribe({
       next: (data) => {
         this.products = data.items;
         this.isLoading = false;

@@ -1,22 +1,43 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import { Category } from '../models/category.model';
 
 @Injectable({ providedIn: 'root' })
 export class CategoriesService {
-  private readonly _categories = signal<Category[]>([
-    { id: '1', name: 'Electronics', slug: 'electronics', icon: 'smartphone', count: 1245 },
-    { id: '2', name: 'Vehicles', slug: 'vehicles', icon: 'directions_car', count: 892 },
-    { id: '3', name: 'Property', slug: 'property', icon: 'real_estate_agent', count: 534 },
-    { id: '4', name: 'Furniture', slug: 'furniture', icon: 'chair', count: 678 },
-    { id: '5', name: 'Fashion', slug: 'fashion', icon: 'checkroom', count: 1102 },
-    { id: '6', name: 'Sports', slug: 'sports', icon: 'fitness_center', count: 445 },
-    { id: '7', name: 'Books', slug: 'books', icon: 'menu_book', count: 312 },
-    { id: '8', name: 'Jobs', slug: 'jobs', icon: 'work', count: 789 },
-  ]);
+  private http = inject(HttpClient);
+  
+  private readonly _categories = signal<Category[]>([]);
 
   readonly categories = this._categories.asReadonly();
 
+  constructor() {
+    this.loadCategories();
+  }
+
+  loadCategories() {
+    this.http.get<any[]>(`${environment.apiUrl}/categories`).subscribe({
+      next: (data) => {
+        // Map DTO to Category model
+        const mapped = data.map(c => ({
+          id: c.id.toString(),
+          name: c.name,
+          slug: c.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+          icon: c.iconUrl || 'category',
+          count: 0 // Count might not be provided by standard DTO
+        }));
+        this._categories.set(mapped);
+      },
+      error: (err) => console.error('Failed to load categories', err)
+    });
+  }
+
   getCategoryBySlug(slug: string): Category | undefined {
     return this._categories().find(c => c.slug === slug);
+  }
+
+  getCategories(): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiUrl}/categories`);
   }
 }

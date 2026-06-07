@@ -13,8 +13,8 @@ import { MediaService } from '../../core/services/media.service';
       </div>
       <input #fileInput type="file" multiple accept="image/*" style="display: none;" (change)="onFileSelected($event)">
       
-      <div class="preview-list" *ngIf="uploadedUrls.length > 0">
-        <div class="preview-item" *ngFor="let url of uploadedUrls; let i = index">
+      <div class="preview-list" *ngIf="previewUrls.length > 0">
+        <div class="preview-item" *ngFor="let url of previewUrls; let i = index">
           <img [src]="url" alt="Preview">
           <button type="button" class="remove-btn" (click)="removeImage(i)">
             <span class="material-symbols-outlined">close</span>
@@ -50,39 +50,36 @@ import { MediaService } from '../../core/services/media.service';
   `]
 })
 export class ImageUpload {
-  mediaService = inject(MediaService);
-  
-  @Output() urlsChange = new EventEmitter<string[]>();
+  @Output() filesChange = new EventEmitter<File[]>();
   
   isUploading = false;
-  uploadedUrls: string[] = [];
+  selectedFiles: File[] = [];
+  previewUrls: string[] = [];
 
   onFileSelected(event: any) {
     const files: FileList = event.target.files;
     if (files.length > 0) {
-      const fileArray = Array.from(files);
-      this.isUploading = true;
-      this.mediaService.uploadListingMedia('temp_listing', fileArray).subscribe({
-        next: (res) => {
-          this.isUploading = false;
-          if (res && res.length > 0) {
-            const urls = res.map(img => img.url || '');
-            this.uploadedUrls = [...this.uploadedUrls, ...urls];
-            this.urlsChange.emit(this.uploadedUrls);
-          }
-        },
-        error: () => {
-          this.isUploading = false;
-          // Mock successful upload since we don't have backend running
-          this.uploadedUrls.push('https://via.placeholder.com/150');
-          this.urlsChange.emit(this.uploadedUrls);
-        }
-      });
+      const newFiles = Array.from(files);
+      
+      this.selectedFiles = [...this.selectedFiles, ...newFiles];
+      
+      // Create local preview URLs
+      const newUrls = newFiles.map(file => URL.createObjectURL(file));
+      this.previewUrls = [...this.previewUrls, ...newUrls];
+      
+      this.filesChange.emit(this.selectedFiles);
     }
   }
 
   removeImage(index: number) {
-    this.uploadedUrls.splice(index, 1);
-    this.urlsChange.emit(this.uploadedUrls);
+    this.selectedFiles.splice(index, 1);
+    
+    // Revoke object URL to prevent memory leaks
+    if (this.previewUrls[index]) {
+      URL.revokeObjectURL(this.previewUrls[index]);
+    }
+    
+    this.previewUrls.splice(index, 1);
+    this.filesChange.emit(this.selectedFiles);
   }
 }

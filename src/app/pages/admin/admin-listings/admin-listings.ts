@@ -37,14 +37,9 @@ export class AdminListings implements OnInit {
         this.totalCount = data.totalCount || this.listings.length;
         this.isLoading = false;
       },
-      error: () => {
+      error: (err) => {
         this.isLoading = false;
-        // Mock data
-        this.listings = [
-          { id: '1', title: 'iPhone 13 Pro', price: 800, status: 'Active', isFeatured: true, createdAt: new Date() },
-          { id: '2', title: 'Used Honda Civic', price: 15000, status: 'Pending', isFeatured: false, createdAt: new Date() }
-        ];
-        this.totalCount = 2;
+        console.error('Failed to load listings', err);
       }
     });
   }
